@@ -1,0 +1,68 @@
+{%- comment -%}
+  Fetch target for the header's search overlay.
+
+  `assets/custom-header.js` requests
+  /search/suggest?q=…&resources[type]=product&section_id=custom-search-results
+  and swaps the markup below into the overlay. Rendering results through a section
+  rather than suggest.json keeps money formatting, translations and image sizing in
+  Liquid instead of reimplementing them in JS.
+{%- endcomment -%}
+
+{%- liquid
+  assign products = predictive_search.resources.products
+  assign terms = predictive_search.terms
+-%}
+
+{%- if products.size > 0 -%}
+  <div class="custom-search__grid">
+    {%- for product in products -%}
+      {%- liquid
+        if settings.currency_code_enabled_product_cards
+          assign price_min = product.price_min | money_with_currency
+        else
+          assign price_min = product.price_min | money
+        endif
+
+        if product.price_varies
+          assign price_display = 'content.price_from' | t: price: price_min
+        else
+          assign price_display = price_min
+        endif
+      -%}
+      <a class="custom-search__card" href="{{ product.url }}">
+        <div class="custom-search__card-media">
+          {%- if product.featured_media -%}
+            {{
+              product.featured_media
+              | image_url: width: 600
+              | image_tag:
+                widths: '200, 300, 400, 600',
+                sizes: '(min-width: 750px) 220px, 44vw',
+                loading: 'lazy',
+                alt: product.featured_media.alt
+            }}
+          {%- endif -%}
+        </div>
+        <div class="custom-search__card-name">{{ product.title }}</div>
+        <div class="custom-search__card-price">{{ price_display }}</div>
+      </a>
+    {%- endfor -%}
+  </div>
+
+  <div class="custom-search__all">
+    <a class="custom-link-underline" href="{{ routes.search_url }}?q={{ terms | url_encode }}">
+      {{- 'actions.view_all' | t -}}
+    </a>
+  </div>
+{%- else -%}
+  <p class="custom-search__empty">
+    {{- 'content.search_results_no_results' | t: terms: terms -}}
+  </p>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Custom search results",
+  "settings": []
+}
+{% endschema %}

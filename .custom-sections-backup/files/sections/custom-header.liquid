@@ -1,0 +1,1178 @@
+{%- liquid
+  assign menu = linklists[section.settings.menu]
+  assign logo_text = section.settings.logo_text | default: shop.name
+  assign logo_sizes = section.settings.logo_width | append: 'px'
+
+  # Transparency only makes sense where a full-bleed section sits directly beneath.
+  assign transparent = false
+  case section.settings.transparency
+    when 'always'
+      assign transparent = true
+    when 'home'
+      if request.page_type == 'index'
+        assign transparent = true
+      endif
+  endcase
+
+  assign use_cart_drawer = false
+  if settings.cart_type == 'drawer' and template.name != 'cart'
+    assign use_cart_drawer = true
+  endif
+
+  assign popular = section.settings.popular_searches | split: ','
+  assign search_menu = linklists[section.settings.search_menu]
+-%}
+
+<script src="{{ 'custom-header.js' | asset_url }}" defer></script>
+
+<header
+  id="CustomHeader-{{ section.id }}"
+  class="custom-header{% if transparent %} custom-header--transparent{% endif %}"
+  data-custom-header
+  style="
+    --custom-header-over-color: {{ section.settings.transparent_text_color }};
+    --custom-header-solid-bg: {{ section.settings.solid_background }};
+    --custom-header-solid-color: {{ section.settings.solid_text_color }};
+    --custom-header-border: {{ section.settings.border_color }};
+  "
+>
+  <div class="custom-header__bar">
+    <div class="custom-header__side custom-header__side--start">
+      {%- if menu.links.size > 0 -%}
+        <button
+          class="custom-header__icon custom-header__burger"
+          type="button"
+          data-custom-drawer-open
+          aria-expanded="false"
+          aria-controls="CustomDrawer-{{ section.id }}"
+          aria-label="{{ 'accessibility.menu' | t }}"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <line x1="3" y1="7" x2="21" y2="7" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="17" x2="21" y2="17" />
+          </svg>
+        </button>
+      {%- endif -%}
+
+      {%- if section.settings.show_search -%}
+        <button
+          class="custom-header__icon"
+          type="button"
+          data-custom-search-open
+          aria-expanded="false"
+          aria-controls="CustomSearch-{{ section.id }}"
+          aria-label="{{ 'content.search' | t }}"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+        </button>
+      {%- endif -%}
+    </div>
+
+    <a class="custom-header__logo" href="{{ routes.root_url }}">
+      {%- if section.settings.logo != blank -%}
+        {{
+          section.settings.logo
+          | image_url: width: 600
+          | image_tag:
+            widths: '150, 300, 450, 600',
+            sizes: logo_sizes,
+            class: 'custom-header__logo-image',
+            alt: shop.name
+        }}
+      {%- else -%}
+        <span class="custom-display custom-header__logo-text">{{ logo_text }}</span>
+      {%- endif -%}
+    </a>
+
+    <div class="custom-header__side custom-header__side--end">
+      {%- if section.settings.show_account and shop.customer_accounts_enabled -%}
+        <a
+          class="custom-header__icon"
+          href="{{ routes.account_url }}"
+          aria-label="{{ 'content.account_title' | t }}"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="8" r="4" /><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8" />
+          </svg>
+        </a>
+      {%- endif -%}
+
+      <a
+        class="custom-header__icon custom-header__cart"
+        href="{{ routes.cart_url }}"
+        {% if use_cart_drawer %}
+          data-custom-cart-drawer
+        {% endif %}
+        aria-label="{{ 'accessibility.cart' | t }}"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 8h12l-1 12H7L6 8z" /><path d="M9 8V6a3 3 0 016 0v2" />
+        </svg>
+        <span
+          class="custom-header__cart-count{% if cart.item_count == 0 %} is-empty{% endif %}"
+          data-custom-cart-count
+        >
+          {{- cart.item_count -}}
+        </span>
+      </a>
+    </div>
+  </div>
+
+  {%- if menu.links.size > 0 -%}
+    <nav class="custom-header__nav" aria-label="{{ 'accessibility.menu' | t }}">
+      <ul class="custom-header__nav-list">
+        {%- for link in menu.links -%}
+          <li class="custom-header__nav-item{% if link.links.size > 0 %} custom-header__nav-item--has-children{% endif %}">
+            <a
+              class="custom-header__nav-link"
+              href="{{ link.url }}"
+              {% if link.active or link.child_active %}
+                aria-current="page"
+              {% endif %}
+            >
+              {{- link.title -}}
+            </a>
+
+            {%- if link.links.size > 0 -%}
+              <div class="custom-header__submenu">
+                <ul>
+                  {%- for child in link.links -%}
+                    <li><a href="{{ child.url }}">{{ child.title }}</a></li>
+                  {%- endfor -%}
+                </ul>
+              </div>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+  {%- endif -%}
+</header>
+
+{%- unless transparent -%}
+  <div class="custom-header__spacer" data-custom-header-spacer></div>
+{%- endunless -%}
+
+{%- comment -%} ---------- drawer ---------- {%- endcomment -%}
+{%- if menu.links.size > 0 -%}
+  <div class="custom-drawer__overlay" data-custom-drawer-close hidden></div>
+
+  <aside
+    id="CustomDrawer-{{ section.id }}"
+    class="custom-drawer"
+    data-custom-drawer
+    aria-label="{{ 'accessibility.menu' | t }}"
+    hidden
+  >
+    <div class="custom-drawer__top">
+      <span class="custom-display custom-drawer__logo">{{ logo_text }}</span>
+      <button
+        class="custom-drawer__close"
+        type="button"
+        data-custom-drawer-close
+        aria-label="{{ 'actions.close' | t }}"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <line x1="5" y1="5" x2="19" y2="19" /><line x1="19" y1="5" x2="5" y2="19" />
+        </svg>
+      </button>
+    </div>
+
+    <nav class="custom-drawer__nav">
+      <ul>
+        {%- for link in menu.links -%}
+          <li>
+            <a href="{{ link.url }}">{{ link.title }}</a>
+            {%- if link.links.size > 0 -%}
+              <ul class="custom-drawer__sub">
+                {%- for child in link.links -%}
+                  <li><a href="{{ child.url }}">{{ child.title }}</a></li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    {%- if section.settings.promo_image != blank or section.settings.promo_text != blank -%}
+      <a class="custom-drawer__promo" href="{{ section.settings.promo_link | default: routes.all_products_collection_url }}">
+        {%- if section.settings.promo_image != blank -%}
+          {{
+            section.settings.promo_image
+            | image_url: width: 200
+            | image_tag: widths: '64, 128, 200', sizes: '64px', loading: 'lazy', alt: ''
+          }}
+        {%- endif -%}
+        <span class="custom-drawer__promo-text">
+          {%- if section.settings.promo_eyebrow != blank -%}
+            <span class="custom-eyebrow">{{ section.settings.promo_eyebrow }}</span>
+          {%- endif -%}
+          {%- if section.settings.promo_text != blank -%}
+            <span class="custom-display">{{ section.settings.promo_text }}</span>
+          {%- endif -%}
+        </span>
+      </a>
+    {%- endif -%}
+
+    <div class="custom-drawer__foot">
+      <span>{{ localization.country.name }} &mdash; {{ localization.country.currency.iso_code }}</span>
+    </div>
+  </aside>
+{%- endif -%}
+
+{%- comment -%} ---------- search overlay ---------- {%- endcomment -%}
+{%- if section.settings.show_search -%}
+  <div id="CustomSearch-{{ section.id }}" class="custom-search" data-custom-search hidden>
+    <div class="custom-search__top">
+      <form class="custom-search__form" action="{{ routes.search_url }}" method="get" role="search">
+        <svg class="custom-search__form-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="7" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        <input type="hidden" name="options[prefix]" value="last">
+        <label class="visually-hidden" for="CustomSearchInput-{{ section.id }}">
+          {{- 'content.search' | t -}}
+        </label>
+        <input
+          id="CustomSearchInput-{{ section.id }}"
+          class="custom-search__input"
+          type="search"
+          name="q"
+          autocomplete="off"
+          placeholder="{{ section.settings.search_placeholder }}"
+          data-custom-search-input
+        >
+      </form>
+      <button
+        class="custom-search__close"
+        type="button"
+        data-custom-search-close
+        aria-label="{{ 'actions.close' | t }}"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <line x1="5" y1="5" x2="19" y2="19" /><line x1="19" y1="5" x2="5" y2="19" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="custom-search__body">
+      <div class="custom-search__suggest" data-custom-search-suggest>
+        {%- if search_menu.links.size > 0 -%}
+          <div class="custom-search__block">
+            <p class="custom-eyebrow">{{ section.settings.categories_label }}</p>
+            <div class="custom-search__chips">
+              {%- for link in search_menu.links -%}
+                <a class="custom-search__chip" href="{{ link.url }}">{{ link.title }}</a>
+              {%- endfor -%}
+            </div>
+          </div>
+        {%- endif -%}
+
+        {%- if popular.size > 0 -%}
+          <div class="custom-search__block">
+            <p class="custom-eyebrow">{{ section.settings.popular_label }}</p>
+            <div class="custom-search__chips">
+              {%- for term in popular -%}
+                {%- assign trimmed = term | strip -%}
+                {%- if trimmed != blank -%}
+                  <button class="custom-search__chip" type="button" data-custom-search-term="{{ trimmed | escape }}">
+                    {{- trimmed -}}
+                  </button>
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+
+      <div class="custom-search__results" data-custom-search-results aria-live="polite"></div>
+    </div>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .custom-header {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline: 0;
+    z-index: 60;
+    background: transparent;
+    border-block-end: 1px solid transparent;
+    color: var(--custom-header-solid-color);
+    transition:
+      background 0.45s ease,
+      border-color 0.45s ease,
+      color 0.45s ease,
+      backdrop-filter 0.45s ease;
+  }
+
+  /* Over a hero the bar is chromeless and its content is knocked out in white;
+     everywhere else — and past the scroll threshold — it resolves to a solid bar. */
+  .custom-header:not(.custom-header--transparent),
+  .custom-header.is-scrolled {
+    background: var(--custom-header-solid-bg);
+    border-block-end-color: var(--custom-header-border);
+    color: var(--custom-header-solid-color);
+    backdrop-filter: blur(10px);
+  }
+
+  .custom-header--transparent:not(.is-scrolled) {
+    color: var(--custom-header-over-color);
+  }
+
+  .custom-header__bar {
+    position: relative;
+    max-width: var(--custom-page-max);
+    margin-inline: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px var(--custom-gutter);
+    transition: padding 0.45s ease;
+  }
+
+  .custom-header.is-scrolled .custom-header__bar {
+    padding-block: 14px;
+  }
+
+  .custom-header__side {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    flex: 1;
+  }
+
+  .custom-header__side--end {
+    justify-content: flex-end;
+  }
+
+  .custom-header__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    color: inherit;
+  }
+
+  .custom-header__icon svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentcolor;
+    fill: none;
+    stroke-width: 1.2;
+    transition: filter 0.45s ease;
+  }
+
+  .custom-header__burger svg {
+    width: 19px;
+    height: 19px;
+    stroke-width: 1.25;
+  }
+
+  /* White-on-photograph needs a shadow to stay legible over a bright frame. */
+  .custom-header--transparent:not(.is-scrolled) .custom-header__icon svg,
+  .custom-header--transparent:not(.is-scrolled) .custom-header__logo {
+    filter: drop-shadow(0 1px 2px rgb(0 0 0 / 25%));
+  }
+
+  .custom-header__logo {
+    position: absolute;
+    inset-inline-start: 50%;
+    inset-block-start: 50%;
+    transform: translate(-50%, -50%);
+    color: inherit;
+    text-decoration: none;
+    transition: font-size 0.45s ease;
+  }
+
+  [dir='rtl'] .custom-header__logo {
+    transform: translate(50%, -50%);
+  }
+
+  .custom-header__logo-text {
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    transition: font-size 0.45s ease;
+  }
+
+  .custom-header.is-scrolled .custom-header__logo-text {
+    font-size: 23px;
+  }
+
+  .custom-header__logo-image {
+    width: auto;
+    height: 34px;
+    object-fit: contain;
+    transition: height 0.45s ease;
+  }
+
+  .custom-header.is-scrolled .custom-header__logo-image {
+    height: 28px;
+  }
+
+  .custom-header__cart {
+    position: relative;
+  }
+
+  /* The pill takes the header's own colour and knocks the digit out in the colour
+     behind it, so it inverts with the header instead of needing its own palette. */
+  .custom-header__cart-count {
+    position: absolute;
+    inset-block-start: -6px;
+    inset-inline-end: -8px;
+    min-width: 15px;
+    height: 15px;
+    padding-inline: 4px;
+    border-radius: 999px;
+    background: currentcolor;
+    color: var(--custom-header-solid-bg);
+    font-family: var(--custom-font-ui);
+    font-size: 9px;
+    line-height: 15px;
+    text-align: center;
+  }
+
+  .custom-header--transparent:not(.is-scrolled) .custom-header__cart-count {
+    color: var(--custom-header-solid-color);
+  }
+
+  .custom-header__cart-count.is-empty {
+    display: none;
+  }
+
+  .custom-header__nav {
+    display: none;
+  }
+
+  .custom-header__spacer {
+    height: var(--custom-header-height, 74px);
+  }
+
+  /* ---------- drawer ---------- */
+  /* These panels set `display`, which ties with the UA's `[hidden]` rule on
+     specificity and wins on order — so honour `hidden` explicitly. */
+  .custom-drawer[hidden],
+  .custom-drawer__overlay[hidden],
+  .custom-search[hidden] {
+    display: none;
+  }
+
+  .custom-drawer__overlay {
+    position: fixed;
+    inset: 0;
+    background: rgb(18 18 18 / 35%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 80;
+  }
+
+  .custom-drawer__overlay.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .custom-drawer {
+    position: fixed;
+    inset-block: 0;
+    inset-inline-start: 0;
+    width: min(86vw, 360px);
+    background: var(--custom-white);
+    color: var(--custom-ink);
+    transform: translateX(-100%);
+    transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 90;
+    display: flex;
+    flex-direction: column;
+    padding: 28px var(--custom-gutter) 26px;
+    box-shadow: 8px 0 30px rgb(0 0 0 / 6%);
+    overflow-y: auto;
+  }
+
+  [dir='rtl'] .custom-drawer {
+    transform: translateX(100%);
+    box-shadow: -8px 0 30px rgb(0 0 0 / 6%);
+  }
+
+  .custom-drawer.is-open {
+    transform: none;
+  }
+
+  .custom-drawer__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-block-end: 22px;
+    border-block-end: 1px solid var(--custom-line);
+    margin-block-end: 8px;
+  }
+
+  .custom-drawer__logo {
+    font-size: 26px;
+    font-weight: 600;
+  }
+
+  .custom-drawer__close {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 50%;
+    background: none;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .custom-drawer__close:hover {
+    background: var(--custom-grey);
+  }
+
+  .custom-drawer__close svg {
+    width: 15px;
+    height: 15px;
+    stroke: var(--custom-ink);
+    fill: none;
+    stroke-width: 1.3;
+  }
+
+  .custom-drawer__nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .custom-drawer__nav > ul > li {
+    border-block-end: 1px solid var(--custom-line);
+    opacity: 0;
+    transform: translateX(-10px);
+    transition:
+      opacity 0.4s ease,
+      transform 0.4s ease;
+    transition-delay: var(--custom-drawer-delay, 0s);
+  }
+
+  [dir='rtl'] .custom-drawer__nav > ul > li {
+    transform: translateX(10px);
+  }
+
+  .custom-drawer.is-open .custom-drawer__nav > ul > li {
+    opacity: 1;
+    transform: none;
+  }
+
+  .custom-drawer__nav > ul > li > a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 17px 2px;
+    font-family: var(--custom-font-display);
+    font-size: 19px;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    color: inherit;
+    transition:
+      padding-inline-start 0.25s ease,
+      color 0.25s ease;
+  }
+
+  [dir='rtl'] .custom-drawer__nav > ul > li > a {
+    font-family: var(--custom-font-arabic);
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .custom-drawer__nav > ul > li > a::after {
+    content: '→';
+    opacity: 0;
+    transform: translateX(-6px);
+    font-family: var(--custom-font-ui);
+    font-size: 13px;
+    color: var(--custom-mute);
+    transition:
+      opacity 0.25s ease,
+      transform 0.25s ease;
+  }
+
+  [dir='rtl'] .custom-drawer__nav > ul > li > a::after {
+    content: '←';
+    transform: translateX(6px);
+  }
+
+  .custom-drawer__nav > ul > li > a:hover {
+    padding-inline-start: 8px;
+    color: var(--custom-mute);
+  }
+
+  .custom-drawer__nav > ul > li > a:hover::after {
+    opacity: 1;
+    transform: none;
+  }
+
+  .custom-drawer__sub {
+    padding: 0 2px 14px;
+    display: grid;
+    gap: 9px;
+  }
+
+  .custom-drawer__sub a {
+    font-family: var(--custom-font-ui);
+    font-size: 13px;
+    color: var(--custom-mute);
+    text-decoration: none;
+  }
+
+  .custom-drawer__sub a:hover {
+    color: var(--custom-ink);
+  }
+
+  .custom-drawer__promo {
+    margin-block-start: 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .custom-drawer__promo img {
+    width: 64px;
+    height: 80px;
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  .custom-drawer__promo-text {
+    display: grid;
+    gap: 4px;
+  }
+
+  .custom-drawer__promo-text .custom-display {
+    font-size: 16px;
+  }
+
+  [dir='rtl'] .custom-drawer__promo-text .custom-display {
+    font-size: 14px;
+  }
+
+  .custom-drawer__foot {
+    margin-block-start: auto;
+    padding-block-start: 20px;
+    border-block-start: 1px solid var(--custom-line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--custom-mute);
+  }
+
+  /* ---------- search overlay ---------- */
+  .custom-search {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: var(--custom-white);
+    color: var(--custom-ink);
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+    transition:
+      opacity 0.3s var(--custom-easing),
+      transform 0.3s var(--custom-easing);
+  }
+
+  .custom-search.is-open {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+
+  .custom-search__top {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px var(--custom-gutter);
+    border-block-end: 1px solid var(--custom-line);
+  }
+
+  .custom-search__form {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .custom-search__form-icon {
+    width: 17px;
+    height: 17px;
+    flex: none;
+    stroke: var(--custom-mute);
+    fill: none;
+    stroke-width: 1.2;
+  }
+
+  .custom-search__input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: none;
+    font-family: inherit;
+    font-size: 15px;
+    color: var(--custom-ink);
+    padding-block: 6px;
+  }
+
+  .custom-search__input:focus-visible {
+    outline: none;
+  }
+
+  .custom-search__input::placeholder {
+    color: var(--custom-mute);
+  }
+
+  .custom-search__close {
+    flex: none;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    padding: 6px;
+  }
+
+  .custom-search__close svg {
+    width: 15px;
+    height: 15px;
+    stroke: var(--custom-ink);
+    fill: none;
+    stroke-width: 1.3;
+  }
+
+  .custom-search__body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 26px var(--custom-gutter) 60px;
+  }
+
+  .custom-search__block + .custom-search__block {
+    margin-block-start: 28px;
+  }
+
+  .custom-search__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-block-start: 12px;
+  }
+
+  .custom-search__chip {
+    border: 1px solid var(--custom-line);
+    background: none;
+    cursor: pointer;
+    border-radius: 999px;
+    padding: 7px 14px;
+    font-family: var(--custom-font-ui);
+    font-size: 12px;
+    color: var(--custom-ink);
+    text-decoration: none;
+    transition:
+      background 0.2s ease,
+      border-color 0.2s ease;
+  }
+
+  .custom-search__chip:hover {
+    background: var(--custom-grey);
+    border-color: var(--custom-grey-deep);
+  }
+
+  .custom-search.has-query .custom-search__suggest {
+    display: none;
+  }
+
+  .custom-search__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 26px 20px;
+  }
+
+  .custom-search__card {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .custom-search__card-media {
+    aspect-ratio: 3 / 4;
+    background: var(--custom-grey);
+    overflow: hidden;
+    margin-block-end: 14px;
+  }
+
+  .custom-search__card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  .custom-search__card-name {
+    font-size: 13.5px;
+    margin-block-end: 4px;
+  }
+
+  .custom-search__card-price {
+    font-family: var(--custom-font-ui);
+    font-size: 12.5px;
+    color: var(--custom-mute);
+  }
+
+  .custom-search__all {
+    text-align: center;
+    margin-block-start: 36px;
+  }
+
+  .custom-search__empty {
+    font-family: var(--custom-font-ui);
+    font-size: 13.5px;
+    color: var(--custom-mute);
+    text-align: center;
+    padding-block: 40px;
+  }
+
+  /* ---------- desktop ---------- */
+  /* The hamburger gives way to an inline nav row beneath the centred monogram —
+     the logo keeps its place on the axis, and the menu gains the room it needs. */
+  @media screen and (min-width: 990px) {
+    .custom-header__burger {
+      display: none;
+    }
+
+    .custom-header__bar {
+      padding-block: 30px 0;
+    }
+
+    .custom-header.is-scrolled .custom-header__bar {
+      padding-block: 16px 0;
+    }
+
+    .custom-header__logo-text {
+      font-size: 34px;
+    }
+
+    .custom-header.is-scrolled .custom-header__logo-text {
+      font-size: 27px;
+    }
+
+    .custom-header__logo-image {
+      height: 44px;
+    }
+
+    .custom-header.is-scrolled .custom-header__logo-image {
+      height: 32px;
+    }
+
+    .custom-header__nav {
+      display: block;
+      max-width: var(--custom-page-max);
+      margin-inline: auto;
+      padding: 22px var(--custom-gutter) 20px;
+      transition: padding 0.45s ease;
+    }
+
+    .custom-header.is-scrolled .custom-header__nav {
+      padding-block: 14px 12px;
+    }
+
+    .custom-header__nav-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      gap: 34px;
+    }
+
+    .custom-header__nav-item {
+      position: relative;
+    }
+
+    .custom-header__nav-link {
+      display: block;
+      font-family: var(--custom-font-ui);
+      font-size: 11.5px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: inherit;
+      padding-block: 4px;
+      border-block-end: 1px solid transparent;
+      transition: border-color 0.3s var(--custom-easing);
+    }
+
+    [dir='rtl'] .custom-header__nav-link {
+      font-family: var(--custom-font-arabic);
+      font-size: 13px;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .custom-header__nav-link:hover,
+    .custom-header__nav-link[aria-current='page'] {
+      border-block-end-color: currentcolor;
+    }
+
+    .custom-header__submenu {
+      position: absolute;
+      inset-block-start: calc(100% + 18px);
+      inset-inline-start: 50%;
+      transform: translateX(-50%) translateY(-6px);
+      min-width: 190px;
+      background: var(--custom-white);
+      border: 1px solid var(--custom-line);
+      padding: 16px 22px;
+      opacity: 0;
+      visibility: hidden;
+      transition:
+        opacity 0.25s var(--custom-easing),
+        transform 0.25s var(--custom-easing),
+        visibility 0.25s;
+    }
+
+    [dir='rtl'] .custom-header__submenu {
+      transform: translateX(50%) translateY(-6px);
+    }
+
+    .custom-header__nav-item:hover .custom-header__submenu,
+    .custom-header__nav-item:focus-within .custom-header__submenu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%);
+    }
+
+    [dir='rtl'] .custom-header__nav-item:hover .custom-header__submenu,
+    [dir='rtl'] .custom-header__nav-item:focus-within .custom-header__submenu {
+      transform: translateX(50%);
+    }
+
+    .custom-header__submenu ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 11px;
+    }
+
+    .custom-header__submenu a {
+      font-family: var(--custom-font-ui);
+      font-size: 13px;
+      color: var(--custom-ink);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: color 0.2s ease;
+    }
+
+    .custom-header__submenu a:hover {
+      color: var(--custom-mute);
+    }
+
+    .custom-search__grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 34px 24px;
+    }
+
+    .custom-search__body {
+      max-width: var(--custom-page-max);
+      margin-inline: auto;
+      width: 100%;
+      padding-block-start: 44px;
+    }
+
+    .custom-search__top {
+      padding-block: 26px;
+    }
+
+    .custom-search__input {
+      font-size: 18px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .custom-header,
+    .custom-header__bar,
+    .custom-drawer,
+    .custom-drawer__nav > ul > li,
+    .custom-search {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Custom header",
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image",
+      "info": "Leave empty to use the text monogram below."
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo width",
+      "min": 60,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Text monogram",
+      "default": "KF"
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "header",
+      "content": "Actions"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Show search",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_account",
+      "label": "Show account",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Search overlay"
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Placeholder",
+      "default": "Search for an abaya or collection"
+    },
+    {
+      "type": "link_list",
+      "id": "search_menu",
+      "label": "Category shortcuts"
+    },
+    {
+      "type": "text",
+      "id": "categories_label",
+      "label": "Category shortcuts label",
+      "default": "Categories"
+    },
+    {
+      "type": "text",
+      "id": "popular_searches",
+      "label": "Popular searches",
+      "info": "Comma separated.",
+      "default": "Everyday, Occasion, Embroidered"
+    },
+    {
+      "type": "text",
+      "id": "popular_label",
+      "label": "Popular searches label",
+      "default": "Popular Searches"
+    },
+    {
+      "type": "header",
+      "content": "Menu drawer promo"
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "promo_eyebrow",
+      "label": "Eyebrow",
+      "default": "Autumn Edit"
+    },
+    {
+      "type": "text",
+      "id": "promo_text",
+      "label": "Text",
+      "default": "Discover the new pieces"
+    },
+    {
+      "type": "url",
+      "id": "promo_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "select",
+      "id": "transparency",
+      "label": "Transparent over the section below",
+      "info": "Only use where a full-bleed banner sits directly under the header.",
+      "options": [
+        { "value": "never", "label": "Never" },
+        { "value": "home", "label": "Home page only" },
+        { "value": "always", "label": "Every page" }
+      ],
+      "default": "home"
+    },
+    {
+      "type": "color",
+      "id": "transparent_text_color",
+      "label": "Text over image",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "solid_background",
+      "label": "Solid background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "solid_text_color",
+      "label": "Solid text",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Bottom border",
+      "default": "#e7e5e0"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,110 @@
+{%- comment -%}
+  Kantara Fashion — shared <head> assets for the `custom-*` sections.
+
+  Rendered once from layout/theme.liquid so every custom section inherits the same
+  palette, type scale and motion language, and so the reveal script is parsed once
+  rather than once per section. Section-specific rules live in each section's own
+  {% stylesheet %} block.
+{%- endcomment -%}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap"
+>
+
+<style>
+  :root {
+    --custom-white: #ffffff;
+    --custom-ink: #121212;
+    --custom-grey: #f1f0ec;
+    --custom-grey-deep: #e7e4dc;
+    --custom-line: #e7e5e0;
+    --custom-mute: #8b8579;
+
+    --custom-font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    --custom-font-ui: 'Inter', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+    --custom-font-arabic: 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif;
+
+    --custom-page-max: 1320px;
+    --custom-gutter: 28px;
+    --custom-easing: cubic-bezier(0.2, 0.6, 0.2, 1);
+  }
+
+  @media screen and (min-width: 750px) {
+    :root {
+      --custom-gutter: 40px;
+    }
+  }
+
+  @media screen and (min-width: 1200px) {
+    :root {
+      --custom-gutter: 56px;
+    }
+  }
+
+  /* Arabic swaps the serif display face for the Arabic sans — the serif has no Arabic glyphs. */
+  html[lang|='ar'] .custom-display,
+  html[dir='rtl'] .custom-display {
+    font-family: var(--custom-font-arabic);
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  .custom-display {
+    font-family: var(--custom-font-display);
+    font-weight: 500;
+    line-height: 1.25;
+  }
+
+  .custom-eyebrow {
+    font-family: var(--custom-font-ui);
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--custom-mute);
+  }
+
+  .custom-link-underline {
+    display: inline-block;
+    font-family: var(--custom-font-ui);
+    font-size: 11.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: inherit;
+    padding-bottom: 4px;
+    border-bottom: 1px solid currentcolor;
+    transition: opacity 0.3s var(--custom-easing);
+  }
+
+  .custom-link-underline:hover {
+    opacity: 0.6;
+  }
+
+  /* Scroll reveal — driven by assets/custom-reveal.js */
+  .custom-reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+      opacity 0.7s var(--custom-easing),
+      transform 0.7s var(--custom-easing);
+    transition-delay: var(--custom-reveal-delay, 0s);
+  }
+
+  .custom-reveal.is-in-view {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .custom-reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
+
+<script src="{{ 'custom-reveal.js' | asset_url }}" defer></script>

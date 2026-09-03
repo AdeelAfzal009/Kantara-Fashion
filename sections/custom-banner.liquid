@@ -1,0 +1,472 @@
+{%- liquid
+  assign image = section.settings.image
+  assign image_mobile = section.settings.image_mobile | default: image
+  assign heading_tag = section.settings.heading_tag | default: 'h2'
+
+  assign widths = '600, 900, 1200, 1600, 1920, 2560, 3840'
+  assign mobile_widths = '450, 600, 750, 900, 1200, 1600' | split: ', '
+
+  if section.index == 1
+    assign fetch_priority = 'high'
+    assign loading = 'eager'
+  else
+    assign fetch_priority = 'auto'
+    assign loading = 'lazy'
+  endif
+
+  case section.settings.height
+    when 'full'
+      assign height_css = '100svh'
+    when 'large'
+      assign height_css = '82svh'
+    when 'medium'
+      assign height_css = '64svh'
+    else
+      assign height_css = section.settings.height_custom | append: 'svh'
+  endcase
+
+  if section.settings.overlay_style == 'gradient'
+    assign overlay_css = 'linear-gradient(0deg, rgba(6, 5, 4, var(--custom-banner-overlay)) 0%, rgba(6, 5, 4, calc(var(--custom-banner-overlay) * 0.44)) 30%, rgba(6, 5, 4, calc(var(--custom-banner-overlay) * 0.05)) 55%)'
+  else
+    assign overlay_css = 'rgba(6, 5, 4, var(--custom-banner-overlay))'
+  endif
+-%}
+
+{%- comment -%}
+  `image_tag` builds the desktop srcset from `widths:`, but a <source> has no such
+  filter, so the mobile candidate list is assembled by hand. Widths larger than the
+  uploaded file are skipped — Shopify will not upscale.
+{%- endcomment -%}
+{%- capture mobile_srcset -%}
+  {%- for width in mobile_widths -%}
+    {%- assign width_number = width | times: 1 -%}
+    {%- if image_mobile.width >= width_number -%}
+      {{ image_mobile | image_url: width: width_number }} {{ width_number }}w,
+    {%- endif -%}
+  {%- endfor -%}
+  {{ image_mobile | image_url: width: image_mobile.width }} {{ image_mobile.width }}w
+{%- endcapture -%}
+
+<section
+  class="custom-banner custom-banner--{{ section.settings.content_width }}"
+  style="
+    --custom-banner-height: {{ height_css }};
+    --custom-banner-min-height: {{ section.settings.min_height }}px;
+    --custom-banner-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    --custom-banner-overlay-bg: {{ overlay_css }};
+    --custom-banner-color: {{ section.settings.text_color }};
+    --custom-banner-focal: 50% {{ section.settings.image_position }}%;
+    --custom-banner-align-x: {{ section.settings.horizontal_alignment }};
+    --custom-banner-align-y: {{ section.settings.vertical_alignment }};
+    --custom-banner-text-align: {{ section.settings.text_alignment }};
+  "
+  data-custom-reveal-group
+>
+  <div class="custom-banner__media">
+    {%- if image != blank -%}
+      <picture>
+        <source
+          media="(max-width: 749px)"
+          srcset="{{ mobile_srcset }}"
+          sizes="100vw"
+        >
+        {{
+          image
+          | image_url: width: 3840
+          | image_tag:
+            widths: widths,
+            sizes: '100vw',
+            loading: loading,
+            fetchpriority: fetch_priority,
+            class: 'custom-banner__image',
+            alt: image.alt
+        }}
+      </picture>
+    {%- else -%}
+      <div class="custom-banner__placeholder">
+        {{ 'hero-apparel-1' | placeholder_svg_tag: 'custom-banner__placeholder-svg' }}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="custom-banner__overlay" aria-hidden="true"></div>
+
+  <div class="custom-banner__content">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="custom-eyebrow custom-banner__eyebrow custom-reveal">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.heading != blank -%}
+      <{{ heading_tag }} class="custom-display custom-banner__heading custom-reveal">
+        {{- section.settings.heading -}}
+      </{{ heading_tag }}>
+    {%- endif -%}
+
+    {%- if section.settings.subheading != blank -%}
+      <p class="custom-banner__subheading custom-reveal">{{ section.settings.subheading }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.button_label != blank -%}
+      <a
+        class="custom-banner__cta custom-reveal"
+        {% if section.settings.button_link != blank %}
+          href="{{ section.settings.button_link }}"
+        {% else %}
+          role="link"
+          aria-disabled="true"
+        {% endif %}
+      >
+        <span>{{ section.settings.button_label }}</span>
+        <svg class="custom-banner__cta-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M5 12h14M13 6l6 6-6 6" />
+        </svg>
+      </a>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .custom-banner {
+    position: relative;
+    display: flex;
+    align-items: var(--custom-banner-align-y);
+    justify-content: var(--custom-banner-align-x);
+    height: var(--custom-banner-height);
+    min-height: var(--custom-banner-min-height);
+    overflow: hidden;
+    background: #141210;
+    color: var(--custom-banner-color);
+  }
+
+  .custom-banner__media,
+  .custom-banner__overlay {
+    position: absolute;
+    inset: 0;
+  }
+
+  .custom-banner__media picture,
+  .custom-banner__image,
+  .custom-banner__placeholder,
+  .custom-banner__placeholder-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: var(--custom-banner-focal);
+  }
+
+  .custom-banner__placeholder-svg {
+    background: var(--custom-grey-deep);
+  }
+
+  .custom-banner__overlay {
+    background: var(--custom-banner-overlay-bg);
+    pointer-events: none;
+  }
+
+  .custom-banner__content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: var(--custom-banner-align-x);
+    text-align: var(--custom-banner-text-align);
+    padding: 120px var(--custom-gutter) 74px;
+    margin-inline: auto;
+  }
+
+  .custom-banner--narrow .custom-banner__content {
+    max-width: 680px;
+  }
+
+  .custom-banner--wide .custom-banner__content {
+    max-width: var(--custom-page-max);
+  }
+
+  .custom-banner__eyebrow {
+    color: currentcolor;
+    opacity: 0.8;
+    font-size: 11.5px;
+    margin-bottom: 16px;
+  }
+
+  .custom-banner__heading {
+    font-size: clamp(26px, 3.6vw, 38px);
+    margin: 0 0 20px;
+    max-width: 18ch;
+  }
+
+  .custom-banner__subheading {
+    font-family: var(--custom-font-ui);
+    font-size: 13.5px;
+    line-height: 1.65;
+    opacity: 0.82;
+    max-width: 46ch;
+    margin: -8px 0 24px;
+  }
+
+  .custom-banner__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-family: var(--custom-font-ui);
+    font-size: 11px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: inherit;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgb(255 255 255 / 70%);
+    transition: gap 0.35s var(--custom-easing), border-color 0.35s var(--custom-easing);
+  }
+
+  .custom-banner__cta:hover {
+    gap: 15px;
+    border-bottom-color: currentcolor;
+  }
+
+  .custom-banner__cta-arrow {
+    width: 13px;
+    height: 13px;
+    stroke: currentcolor;
+    fill: none;
+    stroke-width: 1.4;
+  }
+
+  [dir='rtl'] .custom-banner__cta-arrow {
+    transform: scaleX(-1);
+  }
+
+  /* Desktop: the frame gets taller and the type steps up a scale, but the
+     composition stays the same — image full bleed, content resting near the base. */
+  @media screen and (min-width: 750px) {
+    .custom-banner__content {
+      padding-block: 160px 96px;
+    }
+
+    .custom-banner__eyebrow {
+      font-size: 12px;
+      margin-bottom: 22px;
+    }
+
+    .custom-banner__heading {
+      font-size: clamp(42px, 5vw, 68px);
+      margin-bottom: 28px;
+    }
+
+    .custom-banner__subheading {
+      font-size: 15px;
+      margin: -12px 0 34px;
+    }
+
+    .custom-banner__cta {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+    }
+
+    .custom-banner__cta-arrow {
+      width: 15px;
+      height: 15px;
+    }
+  }
+
+  @media screen and (min-width: 1200px) {
+    .custom-banner--wide .custom-banner__content {
+      padding-block-end: 110px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Custom banner",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile image",
+      "info": "Optional. Falls back to the desktop image."
+    },
+    {
+      "type": "range",
+      "id": "image_position",
+      "label": "Image focal point (vertical)",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Uniquely Yours"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading level",
+      "info": "Use H1 for the first banner on a page.",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ],
+      "default": "h1"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop All"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "Height",
+      "options": [
+        { "value": "full", "label": "Full screen" },
+        { "value": "large", "label": "Large" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "custom", "label": "Custom" }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "range",
+      "id": "height_custom",
+      "label": "Custom height",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Minimum height",
+      "min": 320,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "default": 600
+    },
+    {
+      "type": "select",
+      "id": "content_width",
+      "label": "Content width",
+      "options": [
+        { "value": "narrow", "label": "Narrow (centred column)" },
+        { "value": "wide", "label": "Wide (page width)" }
+      ],
+      "default": "narrow"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment",
+      "label": "Horizontal alignment",
+      "options": [
+        { "value": "flex-start", "label": "Start" },
+        { "value": "center", "label": "Centre" },
+        { "value": "flex-end", "label": "End" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment",
+      "label": "Vertical alignment",
+      "options": [
+        { "value": "flex-start", "label": "Top" },
+        { "value": "center", "label": "Middle" },
+        { "value": "flex-end", "label": "Bottom" }
+      ],
+      "default": "flex-end"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        { "value": "start", "label": "Start" },
+        { "value": "center", "label": "Centre" },
+        { "value": "end", "label": "End" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Colours"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text colour",
+      "default": "#ffffff"
+    },
+    {
+      "type": "select",
+      "id": "overlay_style",
+      "label": "Overlay style",
+      "options": [
+        { "value": "gradient", "label": "Gradient from bottom" },
+        { "value": "solid", "label": "Solid" }
+      ],
+      "default": "gradient"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom banner"
+    }
+  ]
+}
+{% endschema %}

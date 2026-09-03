@@ -1,0 +1,261 @@
+<section
+  class="custom-trust{% if section.settings.border_top %} custom-trust--border-top{% endif %}{% if section.settings.border_bottom %} custom-trust--border-bottom{% endif %}"
+  style="
+    --custom-trust-bg: {{ section.settings.background_color }};
+    --custom-trust-color: {{ section.settings.text_color }};
+    --custom-trust-icon-color: {{ section.settings.icon_color }};
+    --custom-trust-padding-top: {{ section.settings.padding_top }}px;
+    --custom-trust-padding-bottom: {{ section.settings.padding_bottom }}px;
+    --custom-trust-max-width: {{ section.settings.max_width }}px;
+  "
+  data-custom-reveal-group
+>
+  <div class="custom-trust__inner">
+    {%- for block in section.blocks -%}
+      <div class="custom-trust__item custom-reveal" {{ block.shopify_attributes }}>
+        {%- if block.settings.custom_icon != blank -%}
+          {{
+            block.settings.custom_icon
+            | image_url: width: 104
+            | image_tag: class: 'custom-trust__custom-icon', loading: 'lazy', alt: ''
+          }}
+        {%- else -%}
+          {%- render 'custom-icon', icon: block.settings.icon, class: 'custom-trust__icon' -%}
+        {%- endif -%}
+
+        {%- if block.settings.text != blank -%}
+          <span class="custom-trust__text">{{ block.settings.text }}</span>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .custom-trust {
+    background: var(--custom-trust-bg);
+    color: var(--custom-trust-color);
+    padding-block: var(--custom-trust-padding-top) var(--custom-trust-padding-bottom);
+    padding-inline: var(--custom-gutter);
+  }
+
+  .custom-trust--border-top {
+    border-top: 1px solid var(--custom-line);
+  }
+
+  .custom-trust--border-bottom {
+    border-bottom: 1px solid var(--custom-line);
+  }
+
+  .custom-trust__inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 44px 56px;
+    max-width: var(--custom-trust-max-width);
+    margin-inline: auto;
+  }
+
+  .custom-trust__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    max-width: 160px;
+    text-align: center;
+  }
+
+  .custom-trust__icon,
+  .custom-trust__custom-icon {
+    width: 26px;
+    height: 26px;
+    display: block;
+    color: var(--custom-trust-icon-color);
+    object-fit: contain;
+  }
+
+  .custom-trust__text {
+    font-family: var(--custom-font-ui);
+    font-size: 10.5px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    line-height: 1.5;
+    color: var(--custom-mute);
+  }
+
+  /* Desktop: one settled row with generous air rather than a wrapping cluster.
+     Hairline separators give the row structure the mobile stack doesn't need. */
+  @media screen and (min-width: 750px) {
+    .custom-trust__inner {
+      flex-wrap: nowrap;
+      align-items: flex-start;
+      gap: 0;
+    }
+
+    .custom-trust__item {
+      flex: 1 1 0;
+      max-width: none;
+      padding-inline: 32px;
+      gap: 16px;
+    }
+
+    .custom-trust__item + .custom-trust__item {
+      border-inline-start: 1px solid var(--custom-line);
+    }
+
+    .custom-trust__icon,
+    .custom-trust__custom-icon {
+      width: 30px;
+      height: 30px;
+    }
+
+    .custom-trust__text {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Custom trust strip",
+  "disabled_on": {
+    "groups": ["header"]
+  },
+  "max_blocks": 4,
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "shipping", "label": "Shipping" },
+            { "value": "returns", "label": "Returns" },
+            { "value": "payment", "label": "Payment" },
+            { "value": "secure", "label": "Secure checkout" },
+            { "value": "gift", "label": "Gift" },
+            { "value": "support", "label": "Support" },
+            { "value": "exchange", "label": "Exchange" },
+            { "value": "globe", "label": "Worldwide" }
+          ],
+          "default": "shipping"
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_icon",
+          "label": "Custom icon",
+          "info": "Optional. Replaces the icon above."
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Free shipping over AED 300"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maximum width",
+      "min": 600,
+      "max": 1400,
+      "step": 20,
+      "unit": "px",
+      "default": 1100
+    },
+    {
+      "type": "checkbox",
+      "id": "border_top",
+      "label": "Show top border",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "border_bottom",
+      "label": "Show bottom border",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Colours"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#8b8579"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon",
+      "default": "#121212"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom trust strip",
+      "blocks": [
+        {
+          "type": "item",
+          "settings": {
+            "icon": "shipping",
+            "text": "Free shipping over AED 300"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "icon": "returns",
+            "text": "14-day easy returns"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "icon": "payment",
+            "text": "Pay in installments with Tabby & Tamara"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,37 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "header",
+  "name": "t:names.header",
+  "sections": {
+    "custom_header": {
+      "type": "custom-header",
+      "settings": {
+        "logo_text": "KF",
+        "logo_width": 120,
+        "menu": "main-menu",
+        "show_search": true,
+        "show_account": true,
+        "search_placeholder": "Search for an abaya or collection",
+        "categories_label": "Categories",
+        "popular_searches": "Everyday, Occasion, Embroidered",
+        "popular_label": "Popular Searches",
+        "promo_eyebrow": "Autumn Edit",
+        "promo_text": "Discover the new pieces",
+        "transparency": "home",
+        "transparent_text_color": "#ffffff",
+        "solid_background": "#ffffff",
+        "solid_text_color": "#121212",
+        "border_color": "#e7e5e0"
+      }
+    }
+  },
+  "order": ["custom_header"]
+}

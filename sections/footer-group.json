@@ -1,0 +1,45 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "footer",
+  "name": "t:names.footer",
+  "sections": {
+    "custom_footer": {
+      "type": "custom-footer",
+      "blocks": {
+        "column_shop": {
+          "type": "column",
+          "settings": { "heading": "Shop", "menu": "main-menu" }
+        },
+        "column_about": {
+          "type": "column",
+          "settings": { "heading": "About Kantara" }
+        },
+        "column_services": {
+          "type": "column",
+          "settings": { "heading": "Client Services", "menu": "footer" }
+        }
+      },
+      "block_order": ["column_shop", "column_about", "column_services"],
+      "settings": {
+        "logo_text": "KF",
+        "logo_height": 64,
+        "show_localization": true,
+        "ship_to_label": "Ship to",
+        "tagline": "Crafted with care in the UAE",
+        "background_color": "#ffffff",
+        "text_color": "#121212",
+        "line_color": "#e7e5e0",
+        "bar_background": "#e7e4dc"
+      }
+    }
+  },
+  "order": ["custom_footer"]
+}
