@@ -329,18 +329,35 @@
       margin-block-end: 60px;
     }
 
+    /* Spread the columns edge to edge rather than clustering them mid-page: the first
+       starts at the left margin, the last ends at the right, so the row carries the
+       full width the way the centred logo above it does. */
     .custom-footer__columns {
       border-block-start: 0;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
       gap: 40px;
-      max-width: 860px;
+      width: 100%;
       padding-block-end: 52px;
     }
 
     .custom-footer__column {
       border-block-end: 0;
       text-align: start;
+      flex: 0 1 auto;
+      min-width: 140px;
+    }
+
+    /* The last column's text hugs the right edge so the row reads as bracketed by its
+       two ends rather than trailing off. */
+    .custom-footer__column:last-child:not(:only-child) {
+      text-align: end;
+    }
+
+    .custom-footer__column:last-child:not(:only-child) summary {
+      justify-content: flex-end;
     }
 
     .custom-footer__column summary {

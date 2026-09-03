@@ -119,40 +119,7 @@
     </div>
   </div>
 
-  {%- if menu.links.size > 0 -%}
-    <nav class="custom-header__nav" aria-label="{{ 'accessibility.menu' | t }}">
-      <ul class="custom-header__nav-list">
-        {%- for link in menu.links -%}
-          <li class="custom-header__nav-item{% if link.links.size > 0 %} custom-header__nav-item--has-children{% endif %}">
-            <a
-              class="custom-header__nav-link"
-              href="{{ link.url }}"
-              {% if link.active or link.child_active %}
-                aria-current="page"
-              {% endif %}
-            >
-              {{- link.title -}}
-            </a>
-
-            {%- if link.links.size > 0 -%}
-              <div class="custom-header__submenu">
-                <ul>
-                  {%- for child in link.links -%}
-                    <li><a href="{{ child.url }}">{{ child.title }}</a></li>
-                  {%- endfor -%}
-                </ul>
-              </div>
-            {%- endif -%}
-          </li>
-        {%- endfor -%}
-      </ul>
-    </nav>
-  {%- endif -%}
 </header>
-
-{%- unless transparent -%}
-  <div class="custom-header__spacer" data-custom-header-spacer></div>
-{%- endunless -%}
 
 {%- comment -%} ---------- drawer ---------- {%- endcomment -%}
 {%- if menu.links.size > 0 -%}
@@ -292,11 +259,36 @@
 {%- endif -%}
 
 {% stylesheet %}
-  .custom-header {
-    position: fixed;
-    inset-block-start: 0;
-    inset-inline: 0;
+  /* sections/header.liquid declared these on <body> and no longer loads. base.css
+     still reads them for first-section spacing, and an undefined custom property makes
+     those calc() rules invalid at computed-value time. This header always handles its
+     own offset — flow space when solid, a negative margin when transparent — so the
+     offset boolean stays 0. custom-header.js keeps the two heights current. */
+  body {
+    --header-height: 74px;
+    --header-group-height: var(--header-height);
+    --transparent-header-offset-boolean: 0; /* stylelint-disable-line declaration-property-value-disallowed-list */
+  }
+
+  /* At >=990px base.css makes .page-wrapper the scroll container and squeezes it with
+     a margin when a drawer opens. A fixed header sits outside both of those: it never
+     scrolls and never squeezes, so the cart drawer opened underneath it. Sticky keeps
+     the header in that flow. #header-group is the sticky box rather than the header
+     itself, because a sticky element only sticks while its containing block is in
+     view, and the section wrapper is only as tall as the header. */
+  #header-group {
+    position: sticky;
+    top: 0;
     z-index: 60;
+  }
+
+  /* Transparent mode takes its flow space back, so the section below starts at the top
+     of the viewport with the bar floating over it. */
+  #header-group:has(.custom-header--transparent) {
+    margin-block-end: calc(-1 * var(--custom-header-height, 74px));
+  }
+
+  .custom-header {
     background: transparent;
     border-block-end: 1px solid transparent;
     color: var(--custom-header-solid-color);
@@ -443,14 +435,6 @@
 
   .custom-header__cart-count.is-empty {
     display: none;
-  }
-
-  .custom-header__nav {
-    display: none;
-  }
-
-  .custom-header__spacer {
-    height: var(--custom-header-height, 74px);
   }
 
   /* ---------- drawer ---------- */
@@ -849,17 +833,29 @@
   /* ---------- desktop ---------- */
   /* The hamburger gives way to an inline nav row beneath the centred monogram —
      the logo keeps its place on the axis, and the menu gains the room it needs. */
+  /* Desktop keeps the mobile composition — hamburger, centred monogram, actions —
+     and only lets the type and spacing breathe. Navigation stays in the drawer. */
   @media screen and (min-width: 990px) {
-    .custom-header__burger {
-      display: none;
-    }
-
     .custom-header__bar {
-      padding-block: 30px 0;
+      padding-block: 30px;
     }
 
     .custom-header.is-scrolled .custom-header__bar {
-      padding-block: 16px 0;
+      padding-block: 18px;
+    }
+
+    .custom-header__side {
+      gap: 26px;
+    }
+
+    .custom-header__icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .custom-header__burger svg {
+      width: 21px;
+      height: 21px;
     }
 
     .custom-header__logo-text {
@@ -876,110 +872,6 @@
 
     .custom-header.is-scrolled .custom-header__logo-image {
       height: 32px;
-    }
-
-    .custom-header__nav {
-      display: block;
-      max-width: var(--custom-page-max);
-      margin-inline: auto;
-      padding: 22px var(--custom-gutter) 20px;
-      transition: padding 0.45s ease;
-    }
-
-    .custom-header.is-scrolled .custom-header__nav {
-      padding-block: 14px 12px;
-    }
-
-    .custom-header__nav-list {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      gap: 34px;
-    }
-
-    .custom-header__nav-item {
-      position: relative;
-    }
-
-    .custom-header__nav-link {
-      display: block;
-      font-family: var(--custom-font-ui);
-      font-size: 11.5px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      text-decoration: none;
-      color: inherit;
-      padding-block: 4px;
-      border-block-end: 1px solid transparent;
-      transition: border-color 0.3s var(--custom-easing);
-    }
-
-    [dir='rtl'] .custom-header__nav-link {
-      font-family: var(--custom-font-arabic);
-      font-size: 13px;
-      letter-spacing: 0;
-      text-transform: none;
-    }
-
-    .custom-header__nav-link:hover,
-    .custom-header__nav-link[aria-current='page'] {
-      border-block-end-color: currentcolor;
-    }
-
-    .custom-header__submenu {
-      position: absolute;
-      inset-block-start: calc(100% + 18px);
-      inset-inline-start: 50%;
-      transform: translateX(-50%) translateY(-6px);
-      min-width: 190px;
-      background: var(--custom-white);
-      border: 1px solid var(--custom-line);
-      padding: 16px 22px;
-      opacity: 0;
-      visibility: hidden;
-      transition:
-        opacity 0.25s var(--custom-easing),
-        transform 0.25s var(--custom-easing),
-        visibility 0.25s;
-    }
-
-    [dir='rtl'] .custom-header__submenu {
-      transform: translateX(50%) translateY(-6px);
-    }
-
-    .custom-header__nav-item:hover .custom-header__submenu,
-    .custom-header__nav-item:focus-within .custom-header__submenu {
-      opacity: 1;
-      visibility: visible;
-      transform: translateX(-50%);
-    }
-
-    [dir='rtl'] .custom-header__nav-item:hover .custom-header__submenu,
-    [dir='rtl'] .custom-header__nav-item:focus-within .custom-header__submenu {
-      transform: translateX(50%);
-    }
-
-    .custom-header__submenu ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: grid;
-      gap: 11px;
-    }
-
-    .custom-header__submenu a {
-      font-family: var(--custom-font-ui);
-      font-size: 13px;
-      color: var(--custom-ink);
-      text-decoration: none;
-      white-space: nowrap;
-      transition: color 0.2s ease;
-    }
-
-    .custom-header__submenu a:hover {
-      color: var(--custom-mute);
     }
 
     .custom-search__grid {

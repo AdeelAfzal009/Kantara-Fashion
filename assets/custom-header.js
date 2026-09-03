@@ -47,7 +47,6 @@
       this.search = this.query('[data-custom-search]');
       this.searchInput = this.query('[data-custom-search-input]');
       this.searchResults = this.query('[data-custom-search-results]');
-      this.spacer = this.query('[data-custom-header-spacer]');
 
       this.searchAbort = null;
       this.searchTimer = 0;
@@ -67,12 +66,23 @@
 
     /* ---------- scroll state ---------- */
 
+    /**
+     * base.css makes `.page-wrapper` the scroll container at >=990px and leaves the
+     * window scrolling below that, so `window.scrollY` is permanently 0 on desktop and
+     * the bar never turned solid. Listening to both and taking whichever has moved
+     * covers each breakpoint without rebinding when the viewport crosses it.
+     */
     bindScroll() {
+      const pageWrapper = document.querySelector('.page-wrapper');
+
       const update = () => {
-        this.header.classList.toggle('is-scrolled', window.scrollY > SCROLL_THRESHOLD);
+        const scrolled = Math.max(window.scrollY || 0, pageWrapper?.scrollTop || 0);
+        this.header.classList.toggle('is-scrolled', scrolled > SCROLL_THRESHOLD);
       };
+
       update();
       window.addEventListener('scroll', update, { passive: true });
+      pageWrapper?.addEventListener('scroll', update, { passive: true });
     }
 
     /* ---------- header height ---------- */
@@ -83,7 +93,6 @@
         document.body.style.setProperty('--custom-header-height', `${height}px`);
         document.body.style.setProperty('--header-height', `${height}px`);
         document.body.style.setProperty('--header-group-height', `${height}px`);
-        if (this.spacer) this.spacer.style.height = `${height}px`;
       };
 
       publish();
