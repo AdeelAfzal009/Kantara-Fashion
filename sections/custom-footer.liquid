@@ -379,7 +379,9 @@
       font-size: 12px;
     }
 
-    .custom-footer__column summary::after {
+    /* Must also name [open], or the (0,2,2) rule that sets the dash outranks this. */
+    .custom-footer__column summary::after,
+    .custom-footer__column[open] summary::after {
       content: none;
     }
 
@@ -388,15 +390,12 @@
       gap: 12px;
     }
 
+    /* The columns above carry the full width; the region and social row stays centred
+       under them, on the same axis as the logo. */
     .custom-footer__utility {
-      flex-direction: row;
-      justify-content: space-between;
       border-block-start: 1px solid var(--custom-footer-line);
       padding-block-start: 32px;
-    }
-
-    .custom-footer__localization {
-      justify-content: flex-start;
+      gap: 24px;
     }
 
     .custom-footer__bar {

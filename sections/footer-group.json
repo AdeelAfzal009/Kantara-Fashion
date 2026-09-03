@@ -16,23 +16,45 @@
       "blocks": {
         "column_shop": {
           "type": "column",
-          "settings": { "heading": "Shop", "menu": "main-menu" }
+          "settings": {
+            "heading": "Shop",
+            "menu": "main-menu"
+          }
         },
         "column_about": {
           "type": "column",
-          "settings": { "heading": "About Kantara" }
+          "settings": {
+            "heading": "About Kantara",
+            "menu": ""
+          }
         },
         "column_services": {
           "type": "column",
-          "settings": { "heading": "Client Services", "menu": "footer" }
+          "settings": {
+            "heading": "Client Services",
+            "menu": "footer"
+          }
         }
       },
-      "block_order": ["column_shop", "column_about", "column_services"],
+      "block_order": [
+        "column_shop",
+        "column_about",
+        "column_services"
+      ],
       "settings": {
-        "logo_text": "KF",
+        "logo": "shopify://shop_images/KF_logo.png",
         "logo_height": 64,
+        "logo_text": "KF",
         "show_localization": true,
         "ship_to_label": "Ship to",
+        "instagram_url": "#",
+        "tiktok_url": "#",
+        "whatsapp_url": "#",
+        "facebook_url": "#",
+        "pinterest_url": "",
+        "youtube_url": "",
+        "x_url": "",
+        "snapchat_url": "",
         "tagline": "Crafted with care in the UAE",
         "background_color": "#ffffff",
         "text_color": "#121212",
@@ -41,5 +63,7 @@
       }
     }
   },
-  "order": ["custom_footer"]
+  "order": [
+    "custom_footer"
+  ]
 }

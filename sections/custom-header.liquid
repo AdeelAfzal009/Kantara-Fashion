@@ -3,6 +3,15 @@
   assign logo_text = section.settings.logo_text | default: shop.name
   assign logo_sizes = section.settings.logo_width | append: 'px'
 
+  # Over a photograph the mark needs to be knocked out white. A dedicated inverse file
+  # beats the drop-shadow fallback, so when one is set the shadow is dropped.
+  assign logo_solid = section.settings.logo
+  assign logo_over = section.settings.logo_transparent | default: section.settings.logo
+  assign has_inverse_logo = false
+  if section.settings.logo_transparent != blank and section.settings.logo != blank
+    assign has_inverse_logo = true
+  endif
+
   # Transparency only makes sense where a full-bleed section sits directly beneath.
   assign transparent = false
   case section.settings.transparency
@@ -27,7 +36,7 @@
 
 <header
   id="CustomHeader-{{ section.id }}"
-  class="custom-header{% if transparent %} custom-header--transparent{% endif %}"
+  class="custom-header{% if transparent %} custom-header--transparent{% endif %}{% if has_inverse_logo %} custom-header--has-inverse-logo{% endif %}"
   data-custom-header
   style="
     --custom-header-over-color: {{ section.settings.transparent_text_color }};
@@ -70,16 +79,27 @@
     </div>
 
     <a class="custom-header__logo" href="{{ routes.root_url }}">
-      {%- if section.settings.logo != blank -%}
+      {%- if logo_solid != blank -%}
         {{
-          section.settings.logo
+          logo_solid
           | image_url: width: 600
           | image_tag:
             widths: '150, 300, 450, 600',
             sizes: logo_sizes,
-            class: 'custom-header__logo-image',
+            class: 'custom-header__logo-image custom-header__logo-image--solid',
             alt: shop.name
         }}
+        {%- if has_inverse_logo -%}
+          {{
+            logo_over
+            | image_url: width: 600
+            | image_tag:
+              widths: '150, 300, 450, 600',
+              sizes: logo_sizes,
+              class: 'custom-header__logo-image custom-header__logo-image--over',
+              alt: ''
+          }}
+        {%- endif -%}
       {%- else -%}
         <span class="custom-display custom-header__logo-text">{{ logo_text }}</span>
       {%- endif -%}
@@ -369,6 +389,26 @@
   .custom-header--transparent:not(.is-scrolled) .custom-header__icon svg,
   .custom-header--transparent:not(.is-scrolled) .custom-header__logo {
     filter: drop-shadow(0 1px 2px rgb(0 0 0 / 25%));
+  }
+
+  /* An inverse file is already built for the photograph, so it takes no shadow. The
+     icons keep theirs — they are strokes with no inverse artwork to swap in. */
+  .custom-header--has-inverse-logo.custom-header--transparent:not(.is-scrolled) .custom-header__logo {
+    filter: none;
+  }
+
+  /* Only one mark is ever displayed; the other is removed from layout so the
+     absolutely centred anchor keeps its true width. */
+  .custom-header__logo-image--over {
+    display: none;
+  }
+
+  .custom-header--has-inverse-logo.custom-header--transparent:not(.is-scrolled) .custom-header__logo-image--solid {
+    display: none;
+  }
+
+  .custom-header--has-inverse-logo.custom-header--transparent:not(.is-scrolled) .custom-header__logo-image--over {
+    display: block;
   }
 
   .custom-header__logo {
@@ -922,6 +962,12 @@
       "id": "logo",
       "label": "Logo image",
       "info": "Leave empty to use the text monogram below."
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_transparent",
+      "label": "Logo over image",
+      "info": "Optional. An inverse (usually white) mark, used while the header is transparent over a banner. Falls back to the logo above."
     },
     {
       "type": "range",
