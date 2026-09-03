@@ -8,9 +8,10 @@ all of it back.
 
 Run from anywhere:  python3 .custom-sections-backup/restore.py
 
-Safe to run repeatedly. The theme.liquid edits are applied only if missing, and
-anything about to be overwritten is copied to .custom-sections-backup/pre-restore/
-first, so a pull that brought down real theme-editor changes is never lost silently.
+Safe to run repeatedly, and safe to run on a theme carrying real theme-editor work:
+the theme.liquid edits are applied only if missing, the section JSON is left alone once
+it already references our sections, and anything that does get overwritten is copied to
+.custom-sections-backup/pre-restore/ first.
 """
 
 import filecmp
@@ -26,16 +27,18 @@ FILES = BACKUP / "files"
 REFERENCE = BACKUP / "reference"
 PRE_RESTORE = BACKUP / "pre-restore" / datetime.now().strftime("%Y-%m-%d_%H%M%S")
 
-# The four theme files the sections hook into. header/footer groups and the homepage
-# template are replaced wholesale; theme.liquid is patched in place (below) because a
-# pull may legitimately bring down upstream changes worth keeping.
+# The JSON files the sections are wired into. These are ALSO where Shopify writes
+# whatever a merchant does in the theme editor — uploaded images, reordered sections,
+# tweaked settings. A pull brings that work down, so overwriting them wholesale would
+# throw it away. Each is restored only when its marker type is absent, i.e. only when
+# the pull genuinely reverted it to a stock theme that never had our sections.
 GROUP_FILES = [
-    ("reference/header-group.json", "sections/header-group.json"),
-    ("reference/footer-group.json", "sections/footer-group.json"),
-    ("reference/index.json", "templates/index.json"),
+    ("reference/header-group.json", "sections/header-group.json", '"custom-header"'),
+    ("reference/footer-group.json", "sections/footer-group.json", '"custom-footer"'),
+    ("reference/index.json", "templates/index.json", '"custom-banner"'),
 ]
 
-created, skipped, patched = [], [], []
+created, skipped, patched, preserved = [], [], [], []
 
 
 def stash(target: Path) -> None:
@@ -114,13 +117,20 @@ def main() -> int:
         if source.is_file():
             copy_file(source, THEME / source.relative_to(FILES))
 
-    for reference_name, target_name in GROUP_FILES:
-        copy_file(BACKUP / reference_name, THEME / target_name)
+    for reference_name, target_name, marker in GROUP_FILES:
+        target = THEME / target_name
+        if target.exists() and marker in io.open(target, encoding="utf-8").read():
+            # Already wired to our sections. Anything else in here is theme-editor
+            # work that only exists in this copy — never trade it for the reference.
+            preserved.append(f"{target_name} (already wired; editor changes kept)")
+            continue
+        copy_file(BACKUP / reference_name, target)
 
     patch_theme_liquid()
 
     print("\nRestored the Kantara custom sections.\n")
-    for label, items in (("written", created), ("patched", patched), ("already current", skipped)):
+    for label, items in (("written", created), ("patched", patched),
+                         ("left alone", preserved), ("already current", skipped)):
         if items:
             print(f"  {label} ({len(items)}):")
             for item in items:
