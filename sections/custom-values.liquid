@@ -1,0 +1,263 @@
+<section
+  class="custom-values"
+  data-custom-reveal-group
+  style="
+    --custom-values-bg: {{ section.settings.background_color }};
+    --custom-values-color: {{ section.settings.text_color }};
+    --custom-values-heading: {{ section.settings.heading_color }};
+    --custom-values-icon: {{ section.settings.icon_color }};
+    --custom-values-columns: {{ section.settings.columns }};
+    --custom-values-padding-top: {{ section.settings.padding_top }}px;
+    --custom-values-padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  {%- if section.settings.eyebrow != blank or section.settings.heading != blank -%}
+    <div class="custom-values__head custom-reveal">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="custom-eyebrow custom-values__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="custom-display custom-values__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <div class="custom-values__grid">
+    {%- for block in section.blocks -%}
+      <div class="custom-values__item custom-reveal" {{ block.shopify_attributes }}>
+        {%- if block.settings.custom_icon != blank -%}
+          {{
+            block.settings.custom_icon
+            | image_url: width: 120
+            | image_tag: class: 'custom-values__custom-icon', loading: 'lazy', alt: ''
+          }}
+        {%- else -%}
+          {%- render 'custom-icon', icon: block.settings.icon, class: 'custom-values__icon' -%}
+        {%- endif -%}
+
+        {%- if block.settings.heading != blank -%}
+          <h3 class="custom-values__item-heading">{{ block.settings.heading }}</h3>
+        {%- endif -%}
+
+        {%- if block.settings.text != blank -%}
+          <p class="custom-values__item-text">{{ block.settings.text }}</p>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .custom-values {
+    background: var(--custom-values-bg);
+    color: var(--custom-values-color);
+    padding-block: var(--custom-values-padding-top) var(--custom-values-padding-bottom);
+    padding-inline: var(--custom-gutter);
+  }
+
+  .custom-values__head {
+    text-align: center;
+    max-width: 500px;
+    margin: 0 auto 54px;
+  }
+
+  .custom-values__eyebrow {
+    margin-block-end: 14px;
+  }
+
+  .custom-values__heading {
+    color: var(--custom-values-heading);
+    font-size: clamp(24px, 3vw, 30px);
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .custom-values__grid {
+    max-width: 1000px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .custom-values__item {
+    text-align: center;
+  }
+
+  .custom-values__icon,
+  .custom-values__custom-icon {
+    width: 30px;
+    height: 30px;
+    margin: 0 auto 18px;
+    color: var(--custom-values-icon);
+    object-fit: contain;
+  }
+
+  .custom-values__item-heading {
+    font-family: var(--custom-font-ui);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--custom-values-heading);
+    margin: 0 0 10px;
+  }
+
+  /* Arabic has no small-caps tradition, and tracking hurts joined script. */
+  [dir='rtl'] .custom-values__item-heading {
+    font-family: var(--custom-font-arabic);
+    font-size: 14.5px;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .custom-values__item-text {
+    font-family: var(--custom-font-ui);
+    font-size: 13px;
+    line-height: 1.8;
+    margin: 0;
+  }
+
+  @media screen and (min-width: 860px) {
+    .custom-values__grid {
+      grid-template-columns: repeat(var(--custom-values-columns), 1fr);
+      gap: 40px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Custom values",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "max_blocks": 4,
+  "blocks": [
+    {
+      "type": "value",
+      "name": "Value",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "star", "label": "Star" },
+            { "value": "fabric", "label": "Fabric" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "hand", "label": "Hand" },
+            { "value": "leaf", "label": "Leaf" },
+            { "value": "sparkle", "label": "Sparkle" },
+            { "value": "globe", "label": "Worldwide" },
+            { "value": "gift", "label": "Gift" }
+          ],
+          "default": "star"
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_icon",
+          "label": "Custom icon",
+          "info": "Optional. Replaces the icon above."
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Handcrafted"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Every embroidery detail, hand-finished with care"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Values"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "What sets us apart"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns on desktop",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "header",
+      "content": "Colours"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f1f0ec"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Headings",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Body text",
+      "default": "#8b8579"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icons",
+      "default": "#121212"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom values",
+      "blocks": [
+        { "type": "value", "settings": { "icon": "star", "heading": "Handcrafted", "text": "Every embroidery detail, hand-finished with care" } },
+        { "type": "value", "settings": { "icon": "fabric", "heading": "Considered Fabric", "text": "Fabrics sourced from the finest mills worldwide" } },
+        { "type": "value", "settings": { "icon": "shield", "heading": "Made in the UAE", "text": "Designed and crafted with pride in the UAE" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

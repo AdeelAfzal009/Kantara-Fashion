@@ -36,6 +36,7 @@ GROUP_FILES = [
     ("reference/header-group.json", "sections/header-group.json", '"custom-header"'),
     ("reference/footer-group.json", "sections/footer-group.json", '"custom-footer"'),
     ("reference/index.json", "templates/index.json", '"custom-banner"'),
+    ("reference/page.about.json", "templates/page.about.json", '"custom-story-text"'),
 ]
 
 created, skipped, patched, preserved = [], [], [], []

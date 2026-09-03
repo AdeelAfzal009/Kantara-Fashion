@@ -1,0 +1,292 @@
+{%- liquid
+  assign heading_tag = section.settings.heading_tag | default: 'h2'
+  assign image = section.settings.image
+-%}
+
+<section
+  class="custom-split custom-split--image-{{ section.settings.image_position }}"
+  data-custom-reveal-group
+  style="
+    --custom-split-bg: {{ section.settings.background_color }};
+    --custom-split-color: {{ section.settings.text_color }};
+    --custom-split-heading: {{ section.settings.heading_color }};
+    --custom-split-ratio: {{ section.settings.image_ratio }};
+    --custom-split-gap: {{ section.settings.gap }}px;
+    --custom-split-padding-top: {{ section.settings.padding_top }}px;
+    --custom-split-padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="custom-split__inner">
+    <div class="custom-split__media custom-reveal">
+      {%- if image != blank -%}
+        {{
+          image
+          | image_url: width: 1400
+          | image_tag:
+            widths: '400, 600, 800, 1000, 1400',
+            sizes: '(min-width: 860px) 50vw, 100vw',
+            loading: 'lazy',
+            alt: image.alt
+        }}
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'custom-split__placeholder' }}
+      {%- endif -%}
+    </div>
+
+    <div class="custom-split__text custom-reveal">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="custom-eyebrow custom-split__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <{{ heading_tag }} class="custom-display custom-split__heading">
+          {{- section.settings.heading -}}
+        </{{ heading_tag }}>
+      {%- endif -%}
+
+      {%- if section.settings.body != blank -%}
+        <div class="custom-split__body">{{ section.settings.body }}</div>
+      {%- endif -%}
+
+      {%- if section.settings.button_label != blank -%}
+        <a
+          class="custom-link-underline custom-split__cta"
+          {% if section.settings.button_link != blank %}
+            href="{{ section.settings.button_link }}"
+          {% else %}
+            role="link"
+            aria-disabled="true"
+          {% endif %}
+        >
+          {{- section.settings.button_label -}}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .custom-split {
+    background: var(--custom-split-bg);
+    color: var(--custom-split-color);
+    padding-block: var(--custom-split-padding-top) var(--custom-split-padding-bottom);
+    padding-inline: var(--custom-gutter);
+  }
+
+  .custom-split__inner {
+    max-width: var(--custom-page-max);
+    margin-inline: auto;
+    display: grid;
+    gap: 34px;
+    align-items: center;
+  }
+
+  .custom-split__media {
+    aspect-ratio: var(--custom-split-ratio);
+    overflow: hidden;
+    background: var(--custom-grey);
+  }
+
+  .custom-split__media img,
+  .custom-split__placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  .custom-split__eyebrow {
+    margin-block-end: 16px;
+  }
+
+  .custom-split__heading {
+    color: var(--custom-split-heading);
+    font-size: clamp(24px, 3vw, 32px);
+    margin: 0 0 20px;
+    text-wrap: balance;
+  }
+
+  .custom-split__body :is(p, ul, ol) {
+    font-family: var(--custom-font-ui);
+    font-size: 14px;
+    line-height: 2;
+    margin: 0;
+    max-width: 420px;
+  }
+
+  .custom-split__body > * + * {
+    margin-block-start: 1.2em;
+  }
+
+  .custom-split__cta {
+    margin-block-start: 26px;
+    color: var(--custom-split-heading);
+  }
+
+  /* 860px is the design's own breakpoint: below it the pair stacks, above it the
+     image and copy sit side by side. */
+  @media screen and (min-width: 860px) {
+    .custom-split__inner {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--custom-split-gap);
+    }
+
+    /* Source order keeps the image first so it leads on mobile; on desktop the column
+       assignment moves it without touching the reading order. */
+    .custom-split--image-end .custom-split__media {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .custom-split--image-end .custom-split__text {
+      grid-column: 1;
+      grid-row: 1;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Custom story split",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position on desktop",
+      "options": [
+        { "value": "start", "label": "Start" },
+        { "value": "end", "label": "End" }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image ratio",
+      "options": [
+        { "value": "4 / 5", "label": "Portrait (4:5)" },
+        { "value": "3 / 4", "label": "Tall (3:4)" },
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "16 / 9", "label": "Landscape (16:9)" }
+      ],
+      "default": "4 / 5"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading level",
+      "options": [
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Text"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Link label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap between image and text",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Colours"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Body text",
+      "default": "#8b8579"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 90
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom story split"
+    }
+  ]
+}
+{% endschema %}

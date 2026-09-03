@@ -1,0 +1,152 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "story_hero": {
+      "type": "custom-banner",
+      "settings": {
+        "eyebrow": "Kantara Fashion",
+        "heading": "Our Story",
+        "heading_tag": "h1",
+        "button_label": "",
+        "height": "custom",
+        "height_custom": 65,
+        "min_height": 420,
+        "image_position": 20,
+        "content_width": "narrow",
+        "horizontal_alignment": "center",
+        "vertical_alignment": "flex-end",
+        "text_alignment": "center",
+        "text_color": "#ffffff",
+        "overlay_style": "gradient",
+        "overlay_opacity": 60
+      }
+    },
+    "story_idea": {
+      "type": "custom-story-text",
+      "settings": {
+        "text_style": "body",
+        "eyebrow": "The Idea",
+        "heading": "Simplicity, with meaning",
+        "heading_tag": "h2",
+        "body": "<p>Kantara was born from a simple idea: an abaya isn't just something you wear — it's an extension of who you are. We started with a small dream in the heart of the UAE, and grew with the trust of every woman who chose to wear Kantara.</p>",
+        "alignment": "center",
+        "max_width": 640,
+        "background_color": "#ffffff",
+        "heading_color": "#121212",
+        "text_color": "#8b8579",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
+    "story_craft": {
+      "type": "custom-story-split",
+      "settings": {
+        "image_position": "start",
+        "image_ratio": "4 / 5",
+        "eyebrow": "The Craft",
+        "heading": "Details worth the time",
+        "heading_tag": "h2",
+        "body": "<p>Every piece passes through the hands of skilled artisans, from fabric selection to the final embroidery stitch. We believe quality lives in the small details — so we take our time to give you a piece worth keeping for years.</p>",
+        "button_label": "",
+        "gap": 60,
+        "background_color": "#ffffff",
+        "heading_color": "#121212",
+        "text_color": "#8b8579",
+        "padding_top": 20,
+        "padding_bottom": 90
+      }
+    },
+    "story_values": {
+      "type": "custom-values",
+      "blocks": {
+        "value_craft": {
+          "type": "value",
+          "settings": {
+            "icon": "star",
+            "heading": "Handcrafted",
+            "text": "Every embroidery detail, hand-finished with care"
+          }
+        },
+        "value_fabric": {
+          "type": "value",
+          "settings": {
+            "icon": "fabric",
+            "heading": "Considered Fabric",
+            "text": "Fabrics sourced from the finest mills worldwide"
+          }
+        },
+        "value_uae": {
+          "type": "value",
+          "settings": {
+            "icon": "shield",
+            "heading": "Made in the UAE",
+            "text": "Designed and crafted with pride in the UAE"
+          }
+        }
+      },
+      "block_order": [
+        "value_craft",
+        "value_fabric",
+        "value_uae"
+      ],
+      "settings": {
+        "eyebrow": "Values",
+        "heading": "What sets us apart",
+        "columns": 3,
+        "background_color": "#f1f0ec",
+        "heading_color": "#121212",
+        "text_color": "#8b8579",
+        "icon_color": "#121212",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
+    "story_closing": {
+      "type": "custom-story-text",
+      "settings": {
+        "text_style": "statement",
+        "eyebrow": "",
+        "heading": "",
+        "body": "<p>With gratitude, Kantara.</p>",
+        "alignment": "center",
+        "max_width": 640,
+        "background_color": "#ffffff",
+        "heading_color": "#121212",
+        "text_color": "#8b8579",
+        "padding_top": 90,
+        "padding_bottom": 60
+      }
+    },
+    "story_newsletter": {
+      "type": "custom-newsletter",
+      "settings": {
+        "text": "Subscribe for early access to new arrivals",
+        "placeholder": "Your email address",
+        "button_label": "Subscribe",
+        "border_top": true,
+        "border_bottom": true,
+        "background_color": "#ffffff",
+        "text_color": "#8b8579",
+        "rule_color": "#121212",
+        "padding_top": 52,
+        "padding_bottom": 52
+      }
+    }
+  },
+  "order": [
+    "story_hero",
+    "story_idea",
+    "story_craft",
+    "story_values",
+    "story_closing",
+    "story_newsletter"
+  ]
+}

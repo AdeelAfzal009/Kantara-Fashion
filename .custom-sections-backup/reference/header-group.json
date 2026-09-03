@@ -14,17 +14,21 @@
     "custom_header": {
       "type": "custom-header",
       "settings": {
+        "logo": "shopify://shop_images/KF_logo.png",
+        "logo_transparent": "shopify://shop_images/KF_logo_white_2x_fe982c5d-64d6-459b-85cc-644b1c77d330.png",
+        "logo_width": 180,
         "logo_text": "KF",
-        "logo_width": 120,
         "menu": "main-menu",
         "show_search": true,
         "show_account": true,
         "search_placeholder": "Search for an abaya or collection",
+        "search_menu": "",
         "categories_label": "Categories",
         "popular_searches": "Everyday, Occasion, Embroidered",
         "popular_label": "Popular Searches",
         "promo_eyebrow": "Autumn Edit",
         "promo_text": "Discover the new pieces",
+        "promo_link": "",
         "transparency": "home",
         "transparent_text_color": "#ffffff",
         "solid_background": "#ffffff",
@@ -33,5 +37,7 @@
       }
     }
   },
-  "order": ["custom_header"]
+  "order": [
+    "custom_header"
+  ]
 }

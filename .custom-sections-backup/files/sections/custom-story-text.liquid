@@ -1,0 +1,220 @@
+{%- liquid
+  assign heading_tag = section.settings.heading_tag | default: 'h2'
+-%}
+
+<section
+  class="custom-story-text custom-story-text--{{ section.settings.text_style }}"
+  data-custom-reveal-group
+  style="
+    --custom-story-bg: {{ section.settings.background_color }};
+    --custom-story-color: {{ section.settings.text_color }};
+    --custom-story-heading: {{ section.settings.heading_color }};
+    --custom-story-max: {{ section.settings.max_width }}px;
+    --custom-story-align: {{ section.settings.alignment }};
+    --custom-story-padding-top: {{ section.settings.padding_top }}px;
+    --custom-story-padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="custom-story-text__inner custom-reveal">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="custom-eyebrow custom-story-text__eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.heading != blank -%}
+      <{{ heading_tag }} class="custom-display custom-story-text__heading">
+        {{- section.settings.heading -}}
+      </{{ heading_tag }}>
+    {%- endif -%}
+
+    {%- if section.settings.body != blank -%}
+      <div class="custom-story-text__body">{{ section.settings.body }}</div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .custom-story-text {
+    background: var(--custom-story-bg);
+    color: var(--custom-story-color);
+    padding-block: var(--custom-story-padding-top) var(--custom-story-padding-bottom);
+    padding-inline: var(--custom-gutter);
+  }
+
+  .custom-story-text__inner {
+    max-width: var(--custom-story-max);
+    margin-inline: auto;
+    text-align: var(--custom-story-align);
+  }
+
+  .custom-story-text__eyebrow {
+    margin-block-end: 16px;
+  }
+
+  .custom-story-text__heading {
+    color: var(--custom-story-heading);
+    font-size: clamp(24px, 3vw, 30px);
+    margin: 0 0 22px;
+    text-wrap: balance;
+  }
+
+  .custom-story-text__body :is(p, ul, ol) {
+    font-family: var(--custom-font-ui);
+    font-size: 14.5px;
+    line-height: 2;
+    margin: 0;
+  }
+
+  .custom-story-text__body > * + * {
+    margin-block-start: 1.2em;
+  }
+
+  .custom-story-text__body a {
+    color: inherit;
+    text-underline-offset: 3px;
+  }
+
+  /* A closing signature rather than running copy: serif, italic, set in the ink colour
+     so it reads as a sign-off instead of another paragraph. */
+  .custom-story-text--statement .custom-story-text__body :is(p, ul, ol) {
+    font-family: var(--custom-font-display);
+    font-style: italic;
+    font-size: clamp(19px, 2.4vw, 24px);
+    line-height: 1.6;
+    color: var(--custom-story-heading);
+  }
+
+  /* Cormorant Garamond carries no Arabic glyphs, and the sans has no true italic. */
+  [dir='rtl'] .custom-story-text--statement .custom-story-text__body :is(p, ul, ol) {
+    font-family: var(--custom-font-arabic);
+    font-style: normal;
+    font-weight: 500;
+  }
+
+  @media screen and (min-width: 750px) {
+    .custom-story-text__body :is(p, ul, ol) {
+      font-size: 15px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Custom story text",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "select",
+      "id": "text_style",
+      "label": "Style",
+      "options": [
+        { "value": "body", "label": "Body copy" },
+        { "value": "statement", "label": "Statement / signature" }
+      ],
+      "default": "body"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading level",
+      "options": [
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Text"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "start", "label": "Start" },
+        { "value": "center", "label": "Centre" },
+        { "value": "end", "label": "End" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maximum width",
+      "min": 400,
+      "max": 1100,
+      "step": 20,
+      "unit": "px",
+      "default": 640
+    },
+    {
+      "type": "header",
+      "content": "Colours"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Body text",
+      "default": "#8b8579"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom story text"
+    }
+  ]
+}
+{% endschema %}
