@@ -243,6 +243,8 @@
     "remove_one_item_confirmation": "هل تريد إزالة عنصر واحد من سلة التسوق الخاصة بك؟",
     "reviews": "المراجعات",
     "read_more": "قراءة المزيد...",
+    "see_more": "عرض المزيد",
+    "see_less": "عرض أقل",
     "search_input_label": "بحث",
     "search_input_placeholder": "بحث",
     "search": "بحث",

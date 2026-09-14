@@ -92,7 +92,32 @@
   endif
 %}
 
-{% if fallback_text != blank and visible_text == blank %}
+{% liquid
+  assign enable_read_more = block_settings.enable_read_more
+  assign read_more_lines = block_settings.read_more_lines | default: 3
+%}
+
+{% if enable_read_more %}
+  <read-more-text class="text-block-read-more" data-lines="{{ read_more_lines }}" style="--read-more-lines: {{ read_more_lines }};">
+    <div class="text-block-read-more__content">
+      {% if fallback_text != blank and visible_text == blank %}
+        <div {{ attributes | strip_newlines | strip }}>
+          {{ fallback_text }}
+        </div>
+      {% elsif plain_text != blank %}
+        <{{ element }} {{ attributes | strip_newlines | strip }}>
+          {{ block.settings.text }}
+        </{{ element }}>
+      {% endif %}
+    </div>
+    <button type="button" class="text-block-read-more__toggle" aria-expanded="false" hidden>
+      <span class="text-block-read-more__toggle-label" data-more="{{ 'content.see_more' | t }}" data-less="{{ 'content.see_less' | t }}">{{ 'content.see_more' | t }}</span>
+      <svg class="text-block-read-more__toggle-icon" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+        <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+  </read-more-text>
+{% elsif fallback_text != blank and visible_text == blank %}
   <div {{ attributes | strip_newlines | strip }}>
     {{ fallback_text }}
   </div>
@@ -141,5 +166,51 @@
     max-inline-size: min(100%, var(--max-width, 100%));
     text-align: var(--text-align, var(--text-align-default));
     text-wrap: var(--text-wrap);
+  }
+
+  read-more-text {
+    display: block;
+  }
+
+  .text-block-read-more__content {
+    overflow: hidden;
+    max-height: var(--read-more-collapsed-height, calc(var(--read-more-lines, 3) * 1.6em));
+    transition: max-height 0.3s ease;
+  }
+
+  read-more-text[data-overflowing] .text-block-read-more__content {
+    mask-image: linear-gradient(to bottom, black 40%, transparent 95%);
+    -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 95%);
+  }
+
+  read-more-text[expanded] .text-block-read-more__content {
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+
+  .text-block-read-more__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    margin-top: 0.5em;
+    padding: 0;
+    border: none;
+    background: none;
+    font: inherit;
+    font-size: 0.8em;
+    color: currentColor;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+
+  .text-block-read-more__toggle-icon {
+    width: 0.6em;
+    height: 0.6em;
+    transition: transform 0.2s ease;
+  }
+
+  read-more-text[expanded] .text-block-read-more__toggle-icon {
+    transform: rotate(180deg);
   }
 {% endstylesheet %}

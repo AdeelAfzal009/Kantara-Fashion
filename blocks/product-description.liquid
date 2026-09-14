@@ -69,6 +69,26 @@
     },
     {
       "type": "header",
+      "content": "Read more"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_read_more",
+      "label": "Collapse text with a \"see more\" toggle",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "read_more_lines",
+      "label": "Visible lines before truncating",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 3,
+      "visible_if": "{{ block.settings.enable_read_more }}"
+    },
+    {
+      "type": "header",
       "content": "t:content.typography"
     },
     {
