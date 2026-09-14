@@ -196,6 +196,14 @@
               },
               "blocks": {}
             },
+            "size_tabs_KpN82v": {
+              "type": "size-tabs",
+              "name": "Size tabs",
+              "settings": {
+                "show_size_guide_link": true
+              },
+              "blocks": {}
+            },
             "variant_picker_R3rGDr": {
               "type": "variant-picker",
               "settings": {
@@ -216,6 +224,12 @@
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
               },
+              "blocks": {}
+            },
+            "custom_size_Wq93Lf": {
+              "type": "custom-size",
+              "name": "Custom size",
+              "settings": {},
               "blocks": {}
             },
             "buy_buttons_eYQEYi": {
@@ -463,7 +477,9 @@
           "block_order": [
             "group_icgrde",
             "divider_VJhene",
+            "size_tabs_KpN82v",
             "variant_picker_R3rGDr",
+            "custom_size_Wq93Lf",
             "buy_buttons_eYQEYi",
             "text_aEtTtq",
             "accordion_EPJKTE"

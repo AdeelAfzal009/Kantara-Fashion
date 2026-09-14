@@ -1,0 +1,102 @@
+{%- doc -%}
+  Renders the "Ready Size / Custom Size" tab bar for the product page.
+
+  This block only renders the tab controls. The two panels it switches
+  between are the sibling "variant-picker" and "custom-size" blocks placed
+  after it in the same block list; visibility is handled purely in CSS via
+  a `data-active-tab` attribute on the `<size-tabs>` element combined with a
+  general sibling selector, so the panels don't need to be nested inside it.
+{%- enddoc -%}
+
+<size-tabs class="size-tabs" data-active-tab="ready" {{ block.shopify_attributes }}>
+  {% if block.settings.show_size_guide_link %}
+    <a href="#" class="size-tabs__guide-link" data-size-guide-link>{{ 'content.size_guide' | t }}</a>
+  {% endif %}
+  <div class="size-tabs__bar" role="tablist">
+    <button
+      type="button"
+      class="size-tabs__tab active"
+      data-size-tab="ready"
+      role="tab"
+      aria-selected="true"
+    >
+      {{ 'content.ready_size' | t }}
+    </button>
+    <button
+      type="button"
+      class="size-tabs__tab"
+      data-size-tab="custom"
+      role="tab"
+      aria-selected="false"
+    >
+      {{ 'content.custom_size' | t }}
+    </button>
+  </div>
+</size-tabs>
+
+{% stylesheet %}
+  size-tabs {
+    display: block;
+  }
+
+  .size-tabs__guide-link {
+    display: inline-block;
+    font-size: 0.72rem;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    color: var(--color-foreground);
+    margin-bottom: 1rem;
+    cursor: pointer;
+  }
+
+  .size-tabs__bar {
+    display: flex;
+    gap: 1.5rem;
+    border-bottom: 1px solid #e7e5e0;
+  }
+
+  .size-tabs__tab {
+    font-size: 0.6875rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: rgb(var(--color-foreground-rgb) / 0.55);
+    padding-bottom: 0.625rem;
+    border-bottom: 1px solid transparent;
+    margin-bottom: -1px;
+    cursor: pointer;
+  }
+
+  .size-tabs__tab.active {
+    color: var(--color-foreground);
+    border-color: var(--color-foreground);
+  }
+
+  /* The two panels this tab bar controls are later siblings, not children. */
+  size-tabs[data-active-tab='custom'] ~ variant-picker {
+    display: none;
+  }
+
+  size-tabs[data-active-tab='ready'] ~ custom-size-panel {
+    display: none;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Size tabs",
+  "tag": null,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_size_guide_link",
+      "label": "Show \"Size guide\" link",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Size tabs"
+    }
+  ]
+}
+{% endschema %}
