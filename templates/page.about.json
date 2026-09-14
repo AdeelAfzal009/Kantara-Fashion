@@ -12,14 +12,18 @@
     "story_hero": {
       "type": "custom-banner",
       "settings": {
+        "image": "shopify://shop_images/kf_desktop_banner_1920x900_1bd55c8e-6616-4917-82ac-18a06cbe2eb4.jpg",
+        "image_mobile": "shopify://shop_images/kf_mob_banner.jpg",
+        "image_position": 20,
         "eyebrow": "Kantara Fashion",
         "heading": "Our Story",
         "heading_tag": "h1",
+        "subheading": "",
         "button_label": "",
+        "button_link": "",
         "height": "custom",
         "height_custom": 65,
         "min_height": 420,
-        "image_position": 20,
         "content_width": "narrow",
         "horizontal_alignment": "center",
         "vertical_alignment": "flex-end",
@@ -49,6 +53,7 @@
     "story_craft": {
       "type": "custom-story-split",
       "settings": {
+        "image": "shopify://shop_images/productimage.jpg",
         "image_position": "start",
         "image_ratio": "4 / 5",
         "eyebrow": "The Craft",
@@ -56,6 +61,7 @@
         "heading_tag": "h2",
         "body": "<p>Every piece passes through the hands of skilled artisans, from fabric selection to the final embroidery stitch. We believe quality lives in the small details — so we take our time to give you a piece worth keeping for years.</p>",
         "button_label": "",
+        "button_link": "",
         "gap": 60,
         "background_color": "#ffffff",
         "heading_color": "#121212",
@@ -115,6 +121,7 @@
         "text_style": "statement",
         "eyebrow": "",
         "heading": "",
+        "heading_tag": "h2",
         "body": "<p>With gratitude, Kantara.</p>",
         "alignment": "center",
         "max_width": 640,
@@ -128,6 +135,8 @@
     "story_newsletter": {
       "type": "custom-newsletter",
       "settings": {
+        "eyebrow": "",
+        "heading": "",
         "text": "Subscribe for early access to new arrivals",
         "placeholder": "Your email address",
         "button_label": "Subscribe",

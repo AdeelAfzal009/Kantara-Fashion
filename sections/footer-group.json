@@ -18,21 +18,21 @@
           "type": "column",
           "settings": {
             "heading": "Shop",
-            "menu": "main-menu"
+            "menu": "shop"
           }
         },
         "column_about": {
           "type": "column",
           "settings": {
             "heading": "About Kantara",
-            "menu": ""
+            "menu": "about-kantara"
           }
         },
         "column_services": {
           "type": "column",
           "settings": {
             "heading": "Client Services",
-            "menu": "footer"
+            "menu": "client-services"
           }
         }
       },
@@ -44,7 +44,7 @@
       "settings": {
         "logo": "shopify://shop_images/KF_logo.png",
         "logo_height": 64,
-        "logo_text": "KF",
+        "logo_text": "",
         "show_localization": true,
         "ship_to_label": "Ship to",
         "instagram_url": "#",

@@ -6,7 +6,8 @@
  * or related systems. Please exercise caution as any changes
  * made to this file may be overwritten.
  * ------------------------------------------------------------
- */{
+ */
+{
   "sections": {
     "section": {
       "type": "section",
@@ -21,10 +22,12 @@
             "alignment": "left",
             "type_preset": "h2",
             "font": "var(--font-body--family)",
+            "font_size": "1rem",
             "line_height": "normal",
             "letter_spacing": "normal",
             "case": "none",
             "wrap": "pretty",
+            "text_color": "",
             "background": false,
             "background_color": "#00000026",
             "corner_radius": 0,
@@ -45,10 +48,12 @@
             "alignment": "left",
             "type_preset": "rte",
             "font": "var(--font-body--family)",
+            "font_size": "1rem",
             "line_height": "normal",
             "letter_spacing": "normal",
             "case": "none",
             "wrap": "pretty",
+            "text_color": "",
             "background": false,
             "background_color": "#00000026",
             "corner_radius": 0,
@@ -75,19 +80,21 @@
         "vertical_alignment_flex_direction_column": "center",
         "gap": 12,
         "section_width": "page-width",
+        "section_height": "",
         "section_height_custom": 50,
         "background_media": "none",
         "background_color": "{{ settings.color_palette.background }}",
         "video_position": "cover",
         "background_image_position": "cover",
-        "border": "none",
-        "border_width": 1,
-        "border_opacity": 100,
-        "border_radius": 0,
         "toggle_overlay": false,
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_color": "",
+        "border_radius": 0,
         "padding-block-start": 48,
         "padding-block-end": 48
       }
@@ -107,6 +114,8 @@
             "show_filter_label": false,
             "enable_sorting": true,
             "enable_grid_density": true,
+            "background_color": "",
+            "text_color": "",
             "padding-block-start": 8,
             "padding-block-end": 8,
             "padding-inline-start": 0,
@@ -121,9 +130,11 @@
           "static": true,
           "settings": {
             "product_card_gap": 4,
+            "background_color": "",
             "border": "none",
             "border_width": 1,
             "border_opacity": 100,
+            "border_color": "",
             "border_radius": 0,
             "padding-block-start": 0,
             "padding-block-end": 0,
@@ -138,6 +149,7 @@
                 "border": "none",
                 "border_width": 1,
                 "border_opacity": 100,
+                "border_color": "",
                 "border_radius": 0,
                 "padding-block-start": 0,
                 "padding-block-end": 0,
@@ -153,13 +165,14 @@
                 "width": "100%",
                 "max_width": "normal",
                 "alignment": "left",
-                "type_preset": "rte",
+                "type_preset": "custom",
                 "font": "var(--font-body--family)",
                 "font_size": "1rem",
                 "line_height": "normal",
                 "letter_spacing": "normal",
                 "case": "none",
                 "wrap": "pretty",
+                "text_color": "",
                 "background": false,
                 "background_color": "#00000026",
                 "corner_radius": 0,
@@ -176,14 +189,15 @@
                 "show_sale_price_first": true,
                 "show_installments": false,
                 "show_tax_info": false,
-                "type_preset": "h6",
+                "type_preset": "custom",
                 "width": "100%",
                 "alignment": "left",
                 "font": "var(--font-body--family)",
-                "font_size": "1rem",
+                "font_size": "0.75rem",
                 "line_height": "normal",
                 "letter_spacing": "normal",
                 "case": "none",
+                "text_color": "",
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
@@ -201,8 +215,10 @@
       },
       "settings": {
         "layout_type": "grid",
-        "product_card_size": "medium",
+        "product_card_size": "large",
         "mobile_product_card_size": "small",
+        "enable_infinite_scroll": true,
+        "products_per_page": 24,
         "product_grid_width": "centered",
         "full_width_on_mobile": true,
         "columns_gap_horizontal": 16,
@@ -213,10 +229,70 @@
         "padding-block-start": 0,
         "padding-block-end": 32
       }
+    },
+    "custom_trust_strip_9fpjJj": {
+      "type": "custom-trust-strip",
+      "blocks": {
+        "item_g3JY9K": {
+          "type": "item",
+          "settings": {
+            "icon": "shipping",
+            "text": "Free shipping over AED 300"
+          }
+        },
+        "item_4KQYaU": {
+          "type": "item",
+          "settings": {
+            "icon": "returns",
+            "text": "14-day easy returns"
+          }
+        },
+        "item_cnntHE": {
+          "type": "item",
+          "settings": {
+            "icon": "payment",
+            "text": "Pay in installments with Tabby & Tamara"
+          }
+        }
+      },
+      "block_order": [
+        "item_g3JY9K",
+        "item_4KQYaU",
+        "item_cnntHE"
+      ],
+      "settings": {
+        "max_width": 820,
+        "border_top": false,
+        "border_bottom": false,
+        "background_color": "#ffffff",
+        "text_color": "#8b8579",
+        "icon_color": "#121212",
+        "padding_top": 8,
+        "padding_bottom": 64
+      }
+    },
+    "custom_newsletter_mPnz3Y": {
+      "type": "custom-newsletter",
+      "settings": {
+        "eyebrow": "",
+        "heading": "",
+        "text": "Subscribe for early access to new arrivals",
+        "placeholder": "Your email address",
+        "button_label": "Subscribe",
+        "border_top": true,
+        "border_bottom": true,
+        "background_color": "#ffffff",
+        "text_color": "#8b8579",
+        "rule_color": "#121212",
+        "padding_top": 52,
+        "padding_bottom": 52
+      }
     }
   },
   "order": [
     "section",
-    "main"
+    "main",
+    "custom_trust_strip_9fpjJj",
+    "custom_newsletter_mPnz3Y"
   ]
 }
