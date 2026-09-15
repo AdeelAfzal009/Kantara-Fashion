@@ -650,6 +650,38 @@
     --cart-secondary-font-weight: var(--font-{{ settings.cart_price_font }}--weight);
   }
 
+  /*
+    Shopify's font library has no "Cormorant Garamond" handle (only the
+    unrelated "Cormorant" family), so the heading role is forced to the exact
+    typeface here instead — it's already loaded via the Google Fonts link in
+    custom-head.liquid, matching kantara-fashion-en-ar's prototype pages.
+  */
+  :root {
+    --font-heading--family: 'Cormorant Garamond', serif;
+    --font-heading--style: normal;
+    --font-heading--weight: 500;
+  }
+
+  /*
+    Cormorant Garamond has no Arabic glyphs, so Arabic pages swap every type
+    role to IBM Plex Sans Arabic (already loaded in custom-head.liquid),
+    matching the weights used throughout the kantara-fashion-en-ar prototype.
+  */
+  html[dir='rtl'] {
+    --font-body--family: 'IBM Plex Sans Arabic', sans-serif;
+    --font-body--style: normal;
+    --font-body--weight: 400;
+    --font-subheading--family: 'IBM Plex Sans Arabic', sans-serif;
+    --font-subheading--style: normal;
+    --font-subheading--weight: 400;
+    --font-heading--family: 'IBM Plex Sans Arabic', sans-serif;
+    --font-heading--style: normal;
+    --font-heading--weight: 600;
+    --font-accent--family: 'IBM Plex Sans Arabic', sans-serif;
+    --font-accent--style: normal;
+    --font-accent--weight: 400;
+  }
+
   .custom-color-quick-add {
     --quick-add-background: {{ settings.quick_add_background }};
     --quick-add-foreground: {{ settings.quick_add_text }};
