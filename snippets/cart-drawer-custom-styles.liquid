@@ -1,0 +1,207 @@
+{% doc %}
+  Cart Drawer — bespoke visual styling
+
+  Re-skins the standard Horizon cart drawer (colors, typography, shapes,
+  spacing) to match kantara-fashion-en-ar/english/cart.html, reusing the
+  --custom-* tokens and fonts already loaded globally in custom-head.liquid.
+  Scoped to #cart-drawer only — the standalone /cart page keeps its default
+  look.
+{% enddoc %}
+
+{% stylesheet %}
+  #cart-drawer .theme-drawer__title {
+    font-family: var(--custom-font-display, 'Cormorant Garamond', serif);
+    font-weight: 500;
+  }
+
+  html[dir='rtl'] #cart-drawer .theme-drawer__title {
+    font-family: var(--custom-font-arabic, 'IBM Plex Sans Arabic', sans-serif);
+    font-weight: 600;
+  }
+
+  #cart-drawer .cart-items__table-row {
+    padding-bottom: 1.625rem;
+    margin-bottom: 1.625rem;
+    border-bottom: 1px solid var(--custom-line, #e7e5e0);
+    align-items: start;
+  }
+
+  #cart-drawer .cart-items__media-container {
+    background-color: var(--custom-grey, #f1f0ec);
+  }
+
+  #cart-drawer .cart-items__title {
+    font-family: var(--custom-font-display, 'Cormorant Garamond', serif);
+    font-weight: 500;
+    font-size: 1rem;
+    color: var(--custom-ink, #121212);
+  }
+
+  html[dir='rtl'] #cart-drawer .cart-items__title {
+    font-family: var(--custom-font-arabic, 'IBM Plex Sans Arabic', sans-serif);
+    font-weight: 600;
+  }
+
+  #cart-drawer .cart-items__variants,
+  #cart-drawer .cart-items__variant {
+    font-family: var(--custom-font-ui, 'Inter', sans-serif);
+    font-size: 0.75rem;
+    color: var(--custom-mute, #8b8579);
+    line-height: 1.7;
+  }
+
+  #cart-drawer .cart-items__variant dd {
+    color: var(--custom-ink, #121212);
+    font-weight: 500;
+  }
+
+  html[dir='rtl'] #cart-drawer .cart-items__variants,
+  html[dir='rtl'] #cart-drawer .cart-items__variant {
+    font-family: var(--custom-font-arabic, 'IBM Plex Sans Arabic', sans-serif);
+  }
+
+  #cart-drawer .cart-items__price,
+  #cart-drawer .quantity-selector input {
+    font-family: var(--custom-font-ui, 'Inter', sans-serif);
+    font-size: 0.84375rem;
+    color: var(--custom-ink, #121212);
+  }
+
+  html[dir='rtl'] #cart-drawer .cart-items__price {
+    font-family: var(--custom-font-arabic, 'IBM Plex Sans Arabic', sans-serif);
+  }
+
+  #cart-drawer .quantity-selector {
+    border: 1px solid var(--custom-line, #e7e5e0);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    gap: 0.875rem;
+    padding-inline: 0.75rem;
+  }
+
+  #cart-drawer .quantity-selector .quantity-minus,
+  #cart-drawer .quantity-selector .quantity-plus {
+    background: transparent;
+    box-shadow: none;
+    width: auto;
+    height: auto;
+    padding: 0.375rem 0;
+  }
+
+  #cart-drawer .quantity-selector input {
+    border: none;
+    background: transparent;
+    text-align: center;
+  }
+
+  #cart-drawer .cart-items__remove {
+    color: rgb(var(--color-foreground-rgb) / 0.55);
+  }
+
+  /* ---------- summary ---------- */
+  #cart-drawer .cart-totals__original-label,
+  #cart-drawer .cart-totals__total-label,
+  #cart-drawer .cart-totals__tax-note,
+  #cart-drawer .cart-note__label,
+  #cart-drawer .cart-discount__label {
+    font-family: var(--custom-font-ui, 'Inter', sans-serif);
+    font-size: 0.8125rem;
+    color: var(--custom-mute, #8b8579);
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: normal;
+  }
+
+  html[dir='rtl'] #cart-drawer .cart-totals__original-label,
+  html[dir='rtl'] #cart-drawer .cart-totals__total-label,
+  html[dir='rtl'] #cart-drawer .cart-totals__tax-note,
+  html[dir='rtl'] #cart-drawer .cart-note__label,
+  html[dir='rtl'] #cart-drawer .cart-discount__label {
+    font-family: var(--custom-font-arabic, 'IBM Plex Sans Arabic', sans-serif);
+  }
+
+  #cart-drawer .cart-totals__total {
+    font-size: 0.9375rem;
+    color: var(--custom-ink, #121212);
+  }
+
+  #cart-drawer .cart-totals__total-value,
+  #cart-drawer .cart-totals__original-value {
+    font-family: var(--custom-font-ui, 'Inter', sans-serif);
+  }
+
+  html[dir='rtl'] #cart-drawer .cart-totals__total-value,
+  html[dir='rtl'] #cart-drawer .cart-totals__original-value {
+    font-family: var(--custom-font-arabic, 'IBM Plex Sans Arabic', sans-serif);
+  }
+
+  #cart-drawer .cart-totals:not(:has(.cart-actions)) {
+    border-block-start-color: var(--custom-line, #e7e5e0);
+  }
+
+  #cart-drawer .cart-actions {
+    border-color: var(--custom-line, #e7e5e0);
+  }
+
+  #cart-drawer .cart-discount__input {
+    border: none;
+    border-bottom: 1px solid var(--custom-line, #e7e5e0);
+    border-radius: 0;
+    background: transparent;
+    padding: 0.375rem 0.125rem;
+    font-family: var(--custom-font-ui, 'Inter', sans-serif);
+  }
+
+  #cart-drawer .cart-discount__button {
+    font-family: var(--custom-font-ui, 'Inter', sans-serif);
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--custom-ink, #121212);
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    border-bottom: 1px solid var(--custom-ink, #121212);
+    padding: 0 0 0.125rem;
+  }
+
+  /* ---------- checkout ---------- */
+  #cart-drawer .cart__checkout-button {
+    border-radius: 999px;
+    background-color: var(--custom-ink, #121212);
+    color: var(--custom-white, #ffffff);
+    font-family: var(--custom-font-ui, 'Inter', sans-serif);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: none;
+  }
+
+  html[dir='rtl'] #cart-drawer .cart__checkout-button {
+    font-family: var(--custom-font-arabic, 'IBM Plex Sans Arabic', sans-serif);
+    letter-spacing: normal;
+    text-transform: none;
+  }
+
+  /* ---------- empty state ---------- */
+  #cart-drawer .cart-items__empty-button {
+    border-radius: 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--custom-ink, #121212);
+    color: var(--custom-ink, #121212);
+    font-family: var(--custom-font-ui, 'Inter', sans-serif);
+    font-size: 0.71875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0 0 0.25rem;
+    box-shadow: none;
+  }
+
+  html[dir='rtl'] #cart-drawer .cart-items__empty-button {
+    font-family: var(--custom-font-arabic, 'IBM Plex Sans Arabic', sans-serif);
+    letter-spacing: normal;
+    text-transform: none;
+  }
+{% endstylesheet %}

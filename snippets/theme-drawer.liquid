@@ -33,6 +33,7 @@
     if (!window.matchMedia('(min-width: 990px)').matches) return;
 
     var dialogs = [];
+    var hasSqueezableDialog = false;
     for (var i = 0; i < drawerIds.length; i++) {
       var drawer = document.getElementById(drawerIds[i]);
       if (!drawer) continue;
@@ -51,6 +52,7 @@
         dialog.setAttribute('open', '');
         dialog.classList.add('theme-drawer__dialog-instant');
         dialogs.push(dialog);
+        if (!drawer.hasAttribute('always-modal')) hasSqueezableDialog = true;
       }
 
       // Let each drawer type handle its own restore (e.g. shopify-chat mode).
@@ -59,10 +61,11 @@
     }
 
     // Apply squeeze immediately, bypassing the margin transition.
-    // Only squeeze if at least one drawer was actually restored — saved
-    // drawer IDs may not exist on every page (e.g. cart-drawer on /cart).
+    // Only squeeze if at least one squeezable drawer was actually restored —
+    // saved drawer IDs may not exist on every page (e.g. cart-drawer on
+    // /cart), and always-modal drawers (e.g. cart) never squeeze.
     var pageWrapper = document.querySelector('.page-wrapper');
-    if (pageWrapper && dialogs.length > 0) {
+    if (pageWrapper && hasSqueezableDialog) {
       pageWrapper.style.transition = 'none';
       pageWrapper.classList.add('page-wrapper--drawer-open');
     }
@@ -86,23 +89,29 @@
   const squeezeQuery = window.matchMedia('(min-width: 990px)');
 
   // ── Squeeze coordination ──
-  // Listens to all drawers. Only squeezes on wide viewports.
-  document.addEventListener('theme-drawer:open', () => {
-    if (squeezeQuery.matches) {
+  // Listens to all drawers. Only squeezes on wide viewports, and never for
+  // drawers marked `always-modal` (e.g. the cart drawer floats over the page
+  // instead of pushing it aside).
+  function hasSqueezableOpenDrawer() {
+    return Array.from(document.querySelectorAll('theme-drawer[open]')).some(
+      (drawer) => !drawer.hasAttribute('always-modal')
+    );
+  }
+
+  document.addEventListener('theme-drawer:open', (event) => {
+    if (squeezeQuery.matches && event.target instanceof Element && !event.target.hasAttribute('always-modal')) {
       pageWrapper?.classList.add('page-wrapper--drawer-open');
     }
   });
 
   document.addEventListener('theme-drawer:close', () => {
-    const openDrawer = document.querySelector('theme-drawer[open]');
-    if (!openDrawer) {
+    if (!hasSqueezableOpenDrawer()) {
       pageWrapper?.classList.remove('page-wrapper--drawer-open');
     }
   });
 
   squeezeQuery.addEventListener('change', () => {
-    const openDrawer = document.querySelector('theme-drawer[open]');
-    pageWrapper?.classList.toggle('page-wrapper--drawer-open', Boolean(openDrawer) && squeezeQuery.matches);
+    pageWrapper?.classList.toggle('page-wrapper--drawer-open', hasSqueezableOpenDrawer() && squeezeQuery.matches);
   });
 
   // ── State persistence ──
