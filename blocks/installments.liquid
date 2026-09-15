@@ -13,7 +13,7 @@
 %}
 
 {% if product %}
-  <div class="installments" {{ block.shopify_attributes }}>
+  <div class="bnpl-installments" {{ block.shopify_attributes }}>
     <div class="installment-box">
       <span class="installment-box__provider">tabby</span>
       <span class="installment-box__terms">{{ 'content.tabby_terms' | t: amount: tabby_amount }}</span>
@@ -26,7 +26,14 @@
 {% endif %}
 
 {% stylesheet %}
-  .installments {
+  /*
+    Named bnpl-installments, not installments — that class name is already
+    used by the theme's native Shop Pay installments widget
+    (snippets/payment-terms-styles.liquid), which hides itself unless it
+    wraps a <shopify-payment-terms> element. Reusing the name silently hid
+    this block entirely.
+  */
+  .bnpl-installments {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0.75rem;
