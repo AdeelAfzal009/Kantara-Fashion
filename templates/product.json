@@ -183,6 +183,12 @@
                 "price_tVjtKg"
               ]
             },
+            "installments_Fq7bWn": {
+              "type": "installments",
+              "name": "Installments",
+              "settings": {},
+              "blocks": {}
+            },
             "divider_VJhene": {
               "type": "_divider",
               "name": "t:names.divider",
@@ -476,6 +482,7 @@
           },
           "block_order": [
             "group_icgrde",
+            "installments_Fq7bWn",
             "divider_VJhene",
             "size_tabs_KpN82v",
             "variant_picker_R3rGDr",

@@ -1,0 +1,71 @@
+{%- doc -%}
+  Renders placeholder Tabby / Tamara installment boxes for the product page.
+
+  Dummy content for now — the terms text and per-payment amount are computed
+  from the product price, but there's no real Tabby/Tamara integration yet.
+  Swap this out once the store registers with them.
+{%- enddoc -%}
+
+{% liquid
+  assign product = closest.product
+  assign price = product.selected_or_first_available_variant.price | default: product.price
+  assign tabby_amount = price | divided_by: 4.0 | money
+%}
+
+{% if product %}
+  <div class="installments" {{ block.shopify_attributes }}>
+    <div class="installment-box">
+      <span class="installment-box__provider">tabby</span>
+      <span class="installment-box__terms">{{ 'content.tabby_terms' | t: amount: tabby_amount }}</span>
+    </div>
+    <div class="installment-box">
+      <span class="installment-box__provider">tamara</span>
+      <span class="installment-box__terms">{{ 'content.tamara_terms' | t }}</span>
+    </div>
+  </div>
+{% endif %}
+
+{% stylesheet %}
+  .installments {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .installment-box {
+    border: 1px solid #e7e5e0;
+    padding: 0.75rem 0.875rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3125rem;
+  }
+
+  .installment-box__provider {
+    font-family: var(--font-heading--family);
+    font-weight: 600;
+    font-size: 0.875rem;
+    letter-spacing: 0.02em;
+    color: var(--color-foreground);
+    text-transform: lowercase;
+  }
+
+  .installment-box__terms {
+    font-family: var(--font-body--family);
+    font-size: 0.6875rem;
+    color: rgb(var(--color-foreground-rgb) / 0.55);
+    line-height: 1.5;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Installments",
+  "tag": null,
+  "settings": [],
+  "presets": [
+    {
+      "name": "Installments"
+    }
+  ]
+}
+{% endschema %}

@@ -250,6 +250,8 @@
     "custom_size": "مقاس مخصص",
     "unit": "الوحدة",
     "custom_size_note": "سيتواصل معك فريق التفصيل لتأكيد هذه المقاسات قبل شحن طلبك.",
+    "tabby_terms": "٤ دفعات بدون فوائد بقيمة {{ amount }}",
+    "tamara_terms": "قسّميها على ٣ دفعات بدون فوائد",
     "search_input_label": "بحث",
     "search_input_placeholder": "بحث",
     "search": "بحث",
