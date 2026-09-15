@@ -499,6 +499,23 @@
     }
   }
 
+  /*
+    Text/button-style options (Size, Length, etc.) show unavailability as a
+    line through the label text instead of a diagonal line across the whole
+    button — matches kantara-fashion-en-ar's reference design. Swatches keep
+    the diagonal line since there's no label text to strike through.
+  */
+  .variant-option__button-label:not(.variant-option__button-label--has-swatch):has([data-option-available='false'])
+    .variant-option__strikethrough {
+    display: none;
+  }
+
+  .variant-option__button-label:not(.variant-option__button-label--has-swatch):has([data-option-available='false'])
+    .variant-option__button-label__text {
+    text-decoration: line-through;
+    text-decoration-color: currentColor;
+  }
+
   /* Override for swatch labels to maintain block display */
   .variant-option__button-label--has-swatch:has(input[type='radio']) {
     display: block;
