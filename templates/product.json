@@ -297,6 +297,18 @@
                 }
               },
               "block_order": []
+            },
+            "pdp_details_Ab3xK9": {
+              "type": "pdp-details",
+              "settings": {
+                "heading_1": "Size Guide",
+                "text_1": "<p>Refer to the custom size chart above, or reach out and our team will help you choose.</p>",
+                "heading_2": "Fabric & Care",
+                "text_2": "<p>Luxury lined chiffon with hand embroidery in silver thread. Dry clean only.</p>",
+                "heading_3": "Shipping & Returns",
+                "text_3": "<p>Free shipping on orders over AED 300. Free returns within 14 days.</p>"
+              },
+              "blocks": {}
             }
           },
           "block_order": [
@@ -306,7 +318,8 @@
             "size_tabs_KpN82v",
             "variant_picker_R3rGDr",
             "custom_size_Wq93Lf",
-            "buy_buttons_eYQEYi"
+            "buy_buttons_eYQEYi",
+            "pdp_details_Ab3xK9"
           ]
         }
       },
@@ -526,43 +539,10 @@
         "padding_top": 52,
         "padding_bottom": 52
       }
-    },
-    "custom_product_details": {
-      "type": "custom-product-details",
-      "blocks": {
-        "d1": {
-          "type": "detail",
-          "settings": {
-            "heading": "Size Guide",
-            "text": "<p>Refer to the custom size chart above, or reach out and our team will help you choose.</p>"
-          }
-        },
-        "d2": {
-          "type": "detail",
-          "settings": {
-            "heading": "Fabric & Care",
-            "text": "<p>Luxury lined chiffon with hand embroidery in silver thread. Dry clean only.</p>"
-          }
-        },
-        "d3": {
-          "type": "detail",
-          "settings": {
-            "heading": "Shipping & Returns",
-            "text": "<p>Free shipping on orders over AED 300. Free returns within 14 days.</p>"
-          }
-        }
-      },
-      "block_order": [
-        "d1",
-        "d2",
-        "d3"
-      ],
-      "settings": {}
     }
   },
   "order": [
     "main",
-    "custom_product_details",
     "product_recommendations_qggXJq",
     "custom_trust_strip_GhPxxd",
     "custom_newsletter_Bz87Kq"

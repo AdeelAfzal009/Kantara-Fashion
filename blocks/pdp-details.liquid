@@ -1,36 +1,23 @@
-{%- comment -%}
-  Product description + Size Guide / Fabric & Care / Shipping & Returns accordions,
-  built to match kantara-fashion-en-ar/english/product.html (.product-description
-  and .product-details). Description comes from the real product.
-{%- endcomment -%}
-
-<div class="cpd">
+{%- assign product = closest.product -%}
+<div class="cpd" {{ block.shopify_attributes }}>
   {%- if product.description != blank -%}
     <div class="cpd__description">
       <div class="cpd__desc-text cpd__desc-text--collapsed" data-cpd-desc>{{ product.description }}</div>
-      <button
-        type="button"
-        class="cpd__desc-toggle"
-        data-cpd-toggle
-        data-more="{{ 'content.see_more' | t }}"
-        data-less="{{ 'content.see_less' | t }}"
-        hidden
-      >
-        {{ 'content.see_more' | t }}
-      </button>
+      <button type="button" class="cpd__desc-toggle" data-cpd-toggle data-more="{{ 'content.see_more' | t }}" data-less="{{ 'content.see_less' | t }}" hidden>{{ 'content.see_more' | t }}</button>
     </div>
   {%- endif -%}
-
-  {%- if section.blocks.size > 0 -%}
-    <div class="cpd__details">
-      {%- for block in section.blocks -%}
-        <details {{ block.shopify_attributes }}>
-          <summary>{{ block.settings.heading }}</summary>
-          <div class="cpd__panel">{{ block.settings.text }}</div>
+  <div class="cpd__details">
+    {%- for i in (1..3) -%}
+      {%- assign hk = 'heading_' | append: i -%}
+      {%- assign tk = 'text_' | append: i -%}
+      {%- if block.settings[hk] != blank -%}
+        <details>
+          <summary>{{ block.settings[hk] }}</summary>
+          <div class="cpd__panel">{{ block.settings[tk] }}</div>
         </details>
-      {%- endfor -%}
-    </div>
-  {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
 </div>
 
 <script>
@@ -51,9 +38,8 @@
 
 {% stylesheet %}
   .cpd {
-    max-width: 640px;
-    margin: 0 auto;
-    padding: 0.5rem 1.75rem 0.625rem;
+    width: 100%;
+    padding: 0;
     font-family: var(--custom-font-ui, 'Inter', sans-serif);
     color: var(--custom-ink, #121212);
   }
@@ -148,25 +134,48 @@
 {% schema %}
 {
   "name": "Product details",
-  "tag": "section",
-  "blocks": [
+  "tag": null,
+  "settings": [
     {
-      "type": "detail",
-      "name": "Accordion",
-      "settings": [
-        { "type": "text", "id": "heading", "label": "Heading", "default": "Size Guide" },
-        { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Add details here.</p>" }
-      ]
+      "type": "text",
+      "id": "heading_1",
+      "label": "Accordion 1 heading",
+      "default": "Size Guide"
+    },
+    {
+      "type": "richtext",
+      "id": "text_1",
+      "label": "Accordion 1 text",
+      "default": "<p>Refer to the custom size chart above, or reach out and our team will help you choose.</p>"
+    },
+    {
+      "type": "text",
+      "id": "heading_2",
+      "label": "Accordion 2 heading",
+      "default": "Fabric & Care"
+    },
+    {
+      "type": "richtext",
+      "id": "text_2",
+      "label": "Accordion 2 text",
+      "default": "<p>Luxury lined chiffon with hand embroidery in silver thread. Dry clean only.</p>"
+    },
+    {
+      "type": "text",
+      "id": "heading_3",
+      "label": "Accordion 3 heading",
+      "default": "Shipping & Returns"
+    },
+    {
+      "type": "richtext",
+      "id": "text_3",
+      "label": "Accordion 3 text",
+      "default": "<p>Free shipping on orders over AED 300. Free returns within 14 days.</p>"
     }
   ],
   "presets": [
     {
-      "name": "Product details",
-      "blocks": [
-        { "type": "detail", "settings": { "heading": "Size Guide", "text": "<p>Refer to the custom size chart above, or reach out and our team will help you choose.</p>" } },
-        { "type": "detail", "settings": { "heading": "Fabric & Care", "text": "<p>Luxury lined chiffon with hand embroidery in silver thread. Dry clean only.</p>" } },
-        { "type": "detail", "settings": { "heading": "Shipping & Returns", "text": "<p>Free shipping on orders over AED 300. Free returns within 14 days.</p>" } }
-      ]
+      "name": "Product details"
     }
   ]
 }
