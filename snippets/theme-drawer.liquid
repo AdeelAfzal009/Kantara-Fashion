@@ -36,7 +36,7 @@
     var hasSqueezableDialog = false;
     for (var i = 0; i < drawerIds.length; i++) {
       var drawer = document.getElementById(drawerIds[i]);
-      if (!drawer) continue;
+      if (!drawer || drawer.hasAttribute('always-modal')) continue;
 
       drawer.setAttribute('open', '');
 
