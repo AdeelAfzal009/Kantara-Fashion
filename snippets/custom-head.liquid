@@ -83,6 +83,41 @@
     opacity: 0.6;
   }
 
+  /* Product page: compact reference-style accordions, description and buy buttons */
+  .product-details {
+    --height-buy-buttons: 2.75rem;
+  }
+
+  .product-details .accordion {
+    --summary-font-family: var(--custom-font-ui);
+    --summary-font-size: 0.71875rem;
+    --summary-font-weight: 400;
+    --summary-font-case: uppercase;
+    --summary-font-line-height: 1.4;
+  }
+
+  .product-details .accordion summary {
+    letter-spacing: 0.04em;
+    padding-block: 1.125rem;
+  }
+
+  .product-details .accordion .details-content,
+  .product-details .accordion .details-content p {
+    font-family: var(--custom-font-ui);
+    font-size: 0.8125rem;
+    line-height: 1.9;
+    color: var(--custom-mute);
+  }
+
+  .product-details .text-block.custom-typography {
+    color: var(--custom-mute);
+  }
+
+  html[dir='rtl'] .product-details .accordion {
+    --summary-font-family: var(--custom-font-arabic);
+    --summary-font-case: none;
+  }
+
   /* Scroll reveal — driven by assets/custom-reveal.js */
   .custom-reveal {
     opacity: 0;

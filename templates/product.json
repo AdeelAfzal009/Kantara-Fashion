@@ -332,7 +332,7 @@
               "settings": {
                 "icon": "plus",
                 "dividers": true,
-                "divider_color": "",
+                "divider_color": "#e7e5e0",
                 "type_preset": "h5",
                 "background_color": "",
                 "text_color": "",
@@ -351,7 +351,7 @@
                   "type": "_accordion-row",
                   "settings": {
                     "heading": "Size Guide",
-                    "open_by_default": true,
+                    "open_by_default": false,
                     "icon": "none",
                     "width": 20
                   },
