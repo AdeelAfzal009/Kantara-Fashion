@@ -400,4 +400,34 @@
     mask-image: none;
     border-top: 1px solid var(--custom-line, #e7e5e0);
   }
+
+  /* Self-contained so the drawer widget never depends on the product-page block's CSS. */
+  #cart-drawer .cart-bnpl {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  #cart-drawer .cart-bnpl .installment-box {
+    border: 1px solid var(--custom-line, #e7e5e0);
+    padding: 0.75rem 0.875rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3125rem;
+  }
+
+  #cart-drawer .cart-bnpl .installment-box__provider {
+    font-family: var(--custom-font-display, 'Cormorant Garamond', serif);
+    font-weight: 600;
+    font-size: 0.875rem;
+    letter-spacing: 0.02em;
+    text-transform: lowercase;
+    color: var(--custom-ink, #121212);
+  }
+
+  #cart-drawer .cart-bnpl .installment-box__terms {
+    font-family: var(--custom-font-ui, 'Inter', sans-serif);
+    color: var(--custom-mute, #8b8579);
+    line-height: 1.5;
+  }
 {% endstylesheet %}
