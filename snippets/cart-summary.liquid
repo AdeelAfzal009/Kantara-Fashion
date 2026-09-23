@@ -228,6 +228,20 @@
   -%}
 
   <div class="cart-totals__container{% if settings.show_installments %} cart-totals__container--has-installments{% endif %}">
+    <span class="cart-totals__item cart-totals__line">
+      <span class="cart-totals__original-label cart-primary-typography">{{ 'content.cart_subtotal' | t }}</span>
+      <span class="cart-totals__original-value cart-secondary-typography">{{ cart.items_subtotal_price | money }}</span>
+    </span>
+    <span class="cart-totals__item cart-totals__line">
+      <span class="cart-totals__original-label cart-primary-typography">{{ 'content.shipping' | t }}</span>
+      <span class="cart-totals__original-value cart-secondary-typography">
+        {%- if cart.total_price >= 30000 -%}
+          {{ 'content.shipping_free' | t }}
+        {%- else -%}
+          {{ 'content.shipping_at_checkout' | t }}
+        {%- endif -%}
+      </span>
+    </span>
     <span
       class="cart-totals__item cart-totals__total"
       role="status"
@@ -256,6 +270,19 @@
     </div>
   </div>
 </div>
+
+{%- unless cart.empty? -%}
+  <div class="bnpl-installments cart-bnpl">
+    <div class="installment-box">
+      <span class="installment-box__provider">tabby</span>
+      <span class="installment-box__terms">{{ 'content.tabby_terms' | t: amount: cart.total_price | divided_by: 4.0 | money }}</span>
+    </div>
+    <div class="installment-box">
+      <span class="installment-box__provider">tamara</span>
+      <span class="installment-box__terms">{{ 'content.tamara_terms' | t }}</span>
+    </div>
+  </div>
+{%- endunless -%}
 
 <div class="cart__ctas">
   <button

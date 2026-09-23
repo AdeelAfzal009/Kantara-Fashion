@@ -242,7 +242,7 @@
                               <dt class="visually-hidden">{{ option.name }}:</dt>
                               <dd>
                                 {{- option.value -}}
-                                {%- if forloop.last != true %},&nbsp;{% endif -%}
+                                {%- if forloop.last != true %}<span class="cart-items__variant-sep">,&nbsp;</span>{% endif -%}
                               </dd>
                             </div>
                           {%- endfor -%}
