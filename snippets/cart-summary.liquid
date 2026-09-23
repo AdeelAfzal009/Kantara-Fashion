@@ -272,10 +272,11 @@
 </div>
 
 {%- unless cart.empty? -%}
+  {%- assign cart_tabby_amount = cart.total_price | divided_by: 4.0 | money -%}
   <div class="bnpl-installments cart-bnpl">
     <div class="installment-box">
       <span class="installment-box__provider">tabby</span>
-      <span class="installment-box__terms">{{ 'content.tabby_terms' | t: amount: cart.total_price | divided_by: 4.0 | money }}</span>
+      <span class="installment-box__terms">{{ 'content.tabby_terms' | t: amount: cart_tabby_amount }}</span>
     </div>
     <div class="installment-box">
       <span class="installment-box__provider">tamara</span>

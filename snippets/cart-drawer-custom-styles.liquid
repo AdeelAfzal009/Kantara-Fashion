@@ -208,7 +208,28 @@
   /* ---------- item layout: fixed thumbnail, no duplicate unit price ---------- */
   #cart-drawer .cart-items__table-row--full-width-variants {
     grid-template-columns: 5.625rem minmax(0, 1fr) auto;
+    grid-template-rows: min-content min-content 1fr min-content;
+    grid-template-areas:
+      'media details details'
+      'media variants variants'
+      'media quantity price'
+      'media error error';
     column-gap: 1rem;
+  }
+
+  #cart-drawer .cart-items__table-row--full-width-variants .cart-items__quantity {
+    align-self: end;
+    margin-block-start: 0.875rem;
+  }
+
+  #cart-drawer .cart-items__table-row--full-width-variants .cart-items__price {
+    align-self: end;
+    justify-self: end;
+    padding-block-end: 0.75rem;
+  }
+
+  #cart-drawer .cart-drawer__summary {
+    margin-top: 0;
   }
 
   #cart-drawer .cart-items__media-container {
@@ -230,15 +251,15 @@
   }
 
   #cart-drawer .cart-items__variant dt.visually-hidden {
-    position: static;
-    display: inline;
-    width: auto;
-    height: auto;
-    margin: 0;
-    overflow: visible;
-    clip: auto;
-    clip-path: none;
-    white-space: normal;
+    position: static !important;
+    display: inline !important;
+    width: auto !important;
+    height: auto !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    clip: auto !important;
+    clip-path: none !important;
+    white-space: normal !important;
   }
 
   #cart-drawer .cart-items__variant dt {
