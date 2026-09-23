@@ -109,11 +109,7 @@
           assign discount_codes = discount_codes | uniq
 
           # Evaluate the boolean expression for the disclosure state
-          if discount_codes.size == 0
-            assign disclosure_expanded = false
-          else
-            assign disclosure_expanded = true
-          endif
+          assign disclosure_expanded = true
         %}
 
         {% capture cart_discount_accordion_children %}
@@ -246,7 +242,7 @@
       class="cart-totals__item cart-totals__total"
       role="status"
     >
-      <span class="cart-totals__total-label cart-primary-typography">{{ 'content.cart_estimated_total' | t }}</span>
+      <span class="cart-totals__total-label cart-primary-typography">{{ 'content.total' | t }}</span>
       <text-component
         ref="cartTotal"
         value="{{ total_price | strip_html }}"

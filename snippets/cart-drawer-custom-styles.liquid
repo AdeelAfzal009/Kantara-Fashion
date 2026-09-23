@@ -305,4 +305,59 @@
   #cart-drawer .cart-bnpl {
     width: 100%;
   }
+
+  /* ---------- trash | qty | plus in one bordered box ---------- */
+  #cart-drawer .cart-items__quantity-controls {
+    gap: 0;
+    border: 1px solid var(--custom-line, #e7e5e0);
+    padding-inline: 0.75rem;
+    align-items: center;
+  }
+
+  #cart-drawer .cart-items__quantity-controls .quantity-selector {
+    border: 0;
+    padding-inline: 0;
+    gap: 0.875rem;
+  }
+
+  #cart-drawer .cart-items__quantity-controls .quantity-minus {
+    display: none;
+  }
+
+  #cart-drawer .cart-items__remove {
+    order: -1;
+    width: auto;
+    height: auto;
+    padding: 0.375rem 0.875rem 0.375rem 0;
+    color: var(--custom-ink, #121212);
+  }
+
+  #cart-drawer .cart-items__remove svg {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+
+  /* ---------- discount code always visible, inline ---------- */
+  #cart-drawer .cart-discount summary {
+    display: none;
+  }
+
+  #cart-drawer .cart-discount .details-content {
+    block-size: auto;
+    opacity: 1;
+    overflow: visible;
+  }
+
+  #cart-drawer .cart-discount__content {
+    height: auto;
+  }
+
+  #cart-drawer .cart-discount__form {
+    padding-block: 0.875rem;
+  }
+
+  #cart-drawer .cart-discount__input {
+    flex: 1;
+    font-size: 0.8125rem;
+  }
 {% endstylesheet %}
