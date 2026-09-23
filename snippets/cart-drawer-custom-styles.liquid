@@ -380,4 +380,24 @@
   #cart-drawer .installment-box__terms {
     font-size: 0.625rem;
   }
+
+  /* ---------- items scroll; discount, totals and checkout stay pinned ---------- */
+  #cart-drawer .cart-drawer__content {
+    overflow: hidden;
+  }
+
+  #cart-drawer .cart-drawer__items {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  #cart-drawer .cart-drawer__summary {
+    position: static;
+    flex: 0 0 auto;
+    max-height: 62%;
+    overflow-y: auto;
+    mask-image: none;
+    border-top: 1px solid var(--custom-line, #e7e5e0);
+  }
 {% endstylesheet %}

@@ -273,7 +273,20 @@
         drawer.toggle();
       });
 
-      document.addEventListener(CART_LINES_UPDATE, () => this.refreshCartCount());
+      // The event fires before the cart request finishes, so wait for its promise
+      // and read the new total from it; a plain /cart.js fetch here races the update.
+      document.addEventListener(CART_LINES_UPDATE, (event) => {
+        if (!event.promise) return this.refreshCartCount();
+
+        event.promise
+          .then(({ cart, detail }) => {
+            const total = cart?.totalQuantity ?? detail?.itemCount;
+            return typeof total === 'number' ? this.setCartCount(total) : this.refreshCartCount();
+          })
+          .catch((error) => {
+            if (error?.name !== 'AbortError') this.refreshCartCount();
+          });
+      });
     }
 
     async refreshCartCount() {
@@ -285,11 +298,18 @@
         if (!response.ok) return;
 
         const cart = await response.json();
-        count.textContent = String(cart.item_count);
-        count.classList.toggle('is-empty', cart.item_count === 0);
+        this.setCartCount(cart.item_count);
       } catch (error) {
         console.warn('[custom-header] cart count refresh failed:', error);
       }
+    }
+
+    setCartCount(total) {
+      const count = this.header.querySelector('[data-custom-cart-count]');
+      if (!count) return;
+
+      count.textContent = String(total);
+      count.classList.toggle('is-empty', total === 0);
     }
 
     /* ---------- shared ---------- */
