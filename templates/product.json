@@ -297,187 +297,6 @@
                 }
               },
               "block_order": []
-            },
-            "text_aEtTtq": {
-              "type": "text",
-              "name": "t:names.product_description",
-              "settings": {
-                "text": "{{ closest.product.description }}",
-                "width": "fit-content",
-                "max_width": "none",
-                "alignment": "left",
-                "enable_read_more": true,
-                "read_more_lines": 3,
-                "type_preset": "custom",
-                "font": "var(--font-body--family)",
-                "font_size": "0.875rem",
-                "line_height": "loose",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "text_color": "",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "accordion_EPJKTE": {
-              "type": "accordion",
-              "name": "t:names.accordion",
-              "settings": {
-                "icon": "plus",
-                "dividers": true,
-                "divider_color": "#e7e5e0",
-                "type_preset": "h5",
-                "background_color": "",
-                "text_color": "",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_color": "",
-                "border_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {
-                "accordion_row_7gpBk7": {
-                  "type": "_accordion-row",
-                  "settings": {
-                    "heading": "Size Guide",
-                    "open_by_default": false,
-                    "icon": "none",
-                    "width": 20
-                  },
-                  "blocks": {
-                    "text_ccbdPV": {
-                      "type": "text",
-                      "settings": {
-                        "text": "<p>Refer to the custom size chart above, or reach out and our team will help you choose.</p>",
-                        "width": "100%",
-                        "max_width": "normal",
-                        "alignment": "left",
-                        "enable_read_more": false,
-                        "read_more_lines": 3,
-                        "type_preset": "rte",
-                        "font": "var(--font-body--family)",
-                        "font_size": "1rem",
-                        "line_height": "normal",
-                        "letter_spacing": "normal",
-                        "case": "none",
-                        "wrap": "pretty",
-                        "text_color": "",
-                        "background": false,
-                        "background_color": "#00000026",
-                        "corner_radius": 0,
-                        "padding-block-start": 0,
-                        "padding-block-end": 0,
-                        "padding-inline-start": 0,
-                        "padding-inline-end": 0
-                      },
-                      "blocks": {}
-                    }
-                  },
-                  "block_order": [
-                    "text_ccbdPV"
-                  ]
-                },
-                "accordion_row_iT3VR4": {
-                  "type": "_accordion-row",
-                  "name": "t:names.accordion_row",
-                  "settings": {
-                    "heading": "Fabric & Care",
-                    "open_by_default": false,
-                    "icon": "none",
-                    "width": 20
-                  },
-                  "blocks": {
-                    "text_FJRDKH": {
-                      "type": "text",
-                      "settings": {
-                        "text": "<p>Luxury lined chiffon with hand embroidery in silver thread. Dry clean only.</p>",
-                        "width": "100%",
-                        "max_width": "normal",
-                        "alignment": "left",
-                        "enable_read_more": false,
-                        "read_more_lines": 3,
-                        "type_preset": "rte",
-                        "font": "var(--font-body--family)",
-                        "font_size": "1rem",
-                        "line_height": "normal",
-                        "letter_spacing": "normal",
-                        "case": "none",
-                        "wrap": "pretty",
-                        "text_color": "",
-                        "background": false,
-                        "background_color": "#00000026",
-                        "corner_radius": 0,
-                        "padding-block-start": 0,
-                        "padding-block-end": 0,
-                        "padding-inline-start": 0,
-                        "padding-inline-end": 0
-                      },
-                      "blocks": {}
-                    }
-                  },
-                  "block_order": [
-                    "text_FJRDKH"
-                  ]
-                },
-                "accordion_row_nBekxn": {
-                  "type": "_accordion-row",
-                  "name": "t:names.accordion_row",
-                  "settings": {
-                    "heading": "Shipping & Returns",
-                    "open_by_default": false,
-                    "icon": "none",
-                    "width": 20
-                  },
-                  "blocks": {
-                    "text_ipVmRd": {
-                      "type": "text",
-                      "settings": {
-                        "text": "<p>Free shipping on orders over AED 300. Free returns within 14 days.</p>",
-                        "width": "100%",
-                        "max_width": "normal",
-                        "alignment": "left",
-                        "enable_read_more": false,
-                        "read_more_lines": 3,
-                        "type_preset": "rte",
-                        "font": "var(--font-body--family)",
-                        "font_size": "1rem",
-                        "line_height": "normal",
-                        "letter_spacing": "normal",
-                        "case": "none",
-                        "wrap": "pretty",
-                        "text_color": "",
-                        "background": false,
-                        "background_color": "#00000026",
-                        "corner_radius": 0,
-                        "padding-block-start": 0,
-                        "padding-block-end": 0,
-                        "padding-inline-start": 0,
-                        "padding-inline-end": 0
-                      },
-                      "blocks": {}
-                    }
-                  },
-                  "block_order": [
-                    "text_ipVmRd"
-                  ]
-                }
-              },
-              "block_order": [
-                "accordion_row_7gpBk7",
-                "accordion_row_iT3VR4",
-                "accordion_row_nBekxn"
-              ]
             }
           },
           "block_order": [
@@ -487,9 +306,7 @@
             "size_tabs_KpN82v",
             "variant_picker_R3rGDr",
             "custom_size_Wq93Lf",
-            "buy_buttons_eYQEYi",
-            "text_aEtTtq",
-            "accordion_EPJKTE"
+            "buy_buttons_eYQEYi"
           ]
         }
       },
@@ -709,10 +526,43 @@
         "padding_top": 52,
         "padding_bottom": 52
       }
+    },
+    "custom_product_details": {
+      "type": "custom-product-details",
+      "blocks": {
+        "d1": {
+          "type": "detail",
+          "settings": {
+            "heading": "Size Guide",
+            "text": "<p>Refer to the custom size chart above, or reach out and our team will help you choose.</p>"
+          }
+        },
+        "d2": {
+          "type": "detail",
+          "settings": {
+            "heading": "Fabric & Care",
+            "text": "<p>Luxury lined chiffon with hand embroidery in silver thread. Dry clean only.</p>"
+          }
+        },
+        "d3": {
+          "type": "detail",
+          "settings": {
+            "heading": "Shipping & Returns",
+            "text": "<p>Free shipping on orders over AED 300. Free returns within 14 days.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "d1",
+        "d2",
+        "d3"
+      ],
+      "settings": {}
     }
   },
   "order": [
     "main",
+    "custom_product_details",
     "product_recommendations_qggXJq",
     "custom_trust_strip_GhPxxd",
     "custom_newsletter_Bz87Kq"
