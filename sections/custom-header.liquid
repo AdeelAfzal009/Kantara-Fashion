@@ -452,7 +452,9 @@
   }
 
   /* The pill takes the header's own colour and knocks the digit out in the colour
-     behind it, so it inverts with the header instead of needing its own palette. */
+     behind it, so it inverts with the header instead of needing its own palette.
+     Colours are explicit: `currentcolor` here would resolve to the pill's own text
+     colour and make it invisible. */
   .custom-header__cart-count {
     position: absolute;
     inset-block-start: -6px;
@@ -461,7 +463,7 @@
     height: 15px;
     padding-inline: 4px;
     border-radius: 999px;
-    background: currentcolor;
+    background: var(--custom-header-solid-color);
     color: var(--custom-header-solid-bg);
     font-family: var(--custom-font-ui);
     font-size: 9px;
@@ -470,6 +472,7 @@
   }
 
   .custom-header--transparent:not(.is-scrolled) .custom-header__cart-count {
+    background: var(--custom-header-over-color);
     color: var(--custom-header-solid-color);
   }
 
