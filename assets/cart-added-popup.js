@@ -65,8 +65,8 @@ if (dialog) {
         ${image ? `<img src="${escapeHtml(image)}" alt="${escapeHtml(item.product_title)}" width="100" height="124">` : ''}
       </a>
       <div class="cart-added__info">
-        ${options ? `<p class="cart-added__options">${options}</p>` : ''}
         <p class="cart-added__title">${escapeHtml(item.product_title)}</p>
+        ${options ? `<p class="cart-added__options">${options}</p>` : ''}
         <p class="cart-added__price">${escapeHtml(money(item.final_price))}</p>
       </div>`;
   };
