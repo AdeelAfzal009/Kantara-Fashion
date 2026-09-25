@@ -236,12 +236,21 @@
   }
 
   :is(#cart-drawer, .cart-page) .cart-items__media-container {
+    position: relative;
     aspect-ratio: 90 / 112;
     width: 5.625rem;
+    height: auto;
   }
 
+  /* Pinned to the box: Safari won't resolve height: 100% against an
+     aspect-ratio-sized parent and draws the photo at its natural size. */
   :is(#cart-drawer, .cart-page) .cart-items__media-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
     height: 100%;
+    aspect-ratio: auto;
+    object-fit: cover;
     object-position: top center;
   }
 
