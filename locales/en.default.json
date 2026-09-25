@@ -87,6 +87,7 @@
     "open": "Open",
     // Continue shopping link on the cart page which takes the user back to a collection page
     "continue_shopping": "Continue shopping",
+    "view_shopping_bag": "View your shopping bag",
     "enter_password": "Enter password",
     "log_in_html": "Have an account? <a href=\"{{ link }}\">Log in</a> to check out faster.",
     "log_in": "Sign in",
@@ -260,6 +261,13 @@
     "unit": "Unit",
     "custom_size_note": "Our tailoring team will confirm these measurements with you before your order ships.",
     "tabby_terms": "4 interest-free payments of {{ amount }}",
+    "item_added_to_bag": "Item added to your bag",
+    "you_may_also_like": "You may also like",
+    "shopping_bag": "Shopping Bag",
+    "cart_item_count": {
+      "one": "{{ count }} item",
+      "other": "{{ count }} items"
+    },
     "shipping": "Shipping",
     "total": "Total",
     "shipping_free": "Free",

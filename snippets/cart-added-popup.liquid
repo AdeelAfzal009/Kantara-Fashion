@@ -1,0 +1,395 @@
+{% doc %}
+  "Item added to your bag" popup
+
+  Shown after a successful add to cart when the theme uses the cart page
+  (not the drawer). Desktop: a floating card in the top corner. Mobile: a
+  bottom sheet. Lists the added line, "You may also like" recommendations,
+  and links to the cart page. Filled in by assets/cart-added-popup.js.
+{% enddoc %}
+
+{%- if settings.cart_type == 'page' and template.name != 'cart' -%}
+  <script
+    type="module"
+    src="{{ 'cart-added-popup.js' | asset_url }}"
+  ></script>
+
+  <dialog
+    id="cart-added-popup"
+    class="cart-added"
+    aria-labelledby="cart-added-title"
+    data-money-format="{{ shop.money_format | escape }}"
+    data-currency="{{ cart.currency.iso_code }}"
+    data-root="{{ routes.root_url }}"
+  >
+    {%- comment -%} Focus lands on the panel on open instead of ringing the close button. {%- endcomment -%}
+    <div
+      class="cart-added__panel"
+      tabindex="-1"
+      autofocus
+    >
+      <div class="cart-added__head">
+        <h2
+          id="cart-added-title"
+          class="cart-added__heading"
+        >
+          {{ 'content.item_added_to_bag' | t }}
+        </h2>
+        <button
+          type="button"
+          class="cart-added__close"
+          aria-label="{{ 'actions.close' | t }}"
+          data-cart-added-close
+        >
+          <svg
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/>
+          </svg>
+        </button>
+      </div>
+
+      <div
+        class="cart-added__item"
+        data-cart-added-item
+      ></div>
+
+      <div
+        class="cart-added__recs"
+        data-cart-added-recs
+        hidden
+      >
+        <h3 class="cart-added__heading cart-added__heading--center">{{ 'content.you_may_also_like' | t }}</h3>
+        <div
+          class="cart-added__rail"
+          data-cart-added-rail
+        ></div>
+      </div>
+
+      <div class="cart-added__actions">
+        <a
+          href="{{ routes.cart_url }}"
+          class="cart-added__button cart-added__button--primary"
+        >
+          {{- 'actions.view_shopping_bag' | t -}}
+        </a>
+        <button
+          type="button"
+          class="cart-added__button cart-added__button--secondary"
+          data-cart-added-close
+        >
+          {{- 'actions.continue_shopping' | t -}}
+        </button>
+      </div>
+    </div>
+  </dialog>
+{%- endif -%}
+
+{% stylesheet %}
+  html:has(.cart-added[open]) {
+    overflow: hidden;
+  }
+
+  .cart-added {
+    position: fixed;
+    inset: 1.625rem 1.625rem auto auto;
+    margin: 0;
+    padding: 0;
+    width: min(28rem, calc(100vw - 3.25rem));
+    max-width: none;
+    max-height: calc(100dvh - 3.25rem);
+    border: none;
+    border-radius: 1rem;
+    background: var(--custom-white, #ffffff);
+    color: var(--custom-ink, #121212);
+    box-shadow: 0 1.25rem 3.75rem rgb(0 0 0 / 0.12);
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-0.75rem);
+    transition: opacity 0.3s var(--custom-easing, ease), transform 0.3s var(--custom-easing, ease),
+      overlay 0.3s allow-discrete, display 0.3s allow-discrete;
+  }
+
+  html[dir='rtl'] .cart-added {
+    inset: 1.625rem auto auto 1.625rem;
+  }
+
+  .cart-added[open] {
+    opacity: 1;
+    transform: none;
+
+    @starting-style {
+      opacity: 0;
+      transform: translateY(-0.75rem);
+    }
+  }
+
+  .cart-added::backdrop {
+    background: rgb(18 18 18 / 0);
+    transition: background 0.3s ease, overlay 0.3s allow-discrete, display 0.3s allow-discrete;
+  }
+
+  .cart-added[open]::backdrop {
+    background: rgb(18 18 18 / 0.45);
+
+    @starting-style {
+      background: rgb(18 18 18 / 0);
+    }
+  }
+
+  .cart-added__panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    max-height: inherit;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 1.625rem 1.625rem 1.5rem;
+  }
+
+  .cart-added__panel:focus {
+    outline: none;
+  }
+
+  .cart-added__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .cart-added__heading {
+    margin: 0;
+    font-family: var(--custom-font-ui, 'Inter', sans-serif);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--custom-ink, #121212);
+  }
+
+  .cart-added__heading--center {
+    text-align: center;
+    margin-block-end: 1rem;
+  }
+
+  html[dir='rtl'] .cart-added__heading {
+    font-family: var(--custom-font-arabic, 'IBM Plex Sans Arabic', sans-serif);
+    letter-spacing: normal;
+  }
+
+  .cart-added__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--custom-ink, #121212);
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .cart-added__close:hover {
+    background: var(--custom-grey, #f1f0ec);
+  }
+
+  .cart-added__close svg {
+    width: 0.9375rem;
+    height: 0.9375rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.3;
+  }
+
+  /* ---------- added line ---------- */
+  .cart-added__item {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .cart-added__thumb {
+    flex: 0 0 6.25rem;
+    width: 6.25rem;
+    aspect-ratio: 90 / 112;
+    background: var(--custom-grey, #f1f0ec);
+    overflow: hidden;
+  }
+
+  .cart-added__thumb img,
+  .cart-added__card-media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  .cart-added__info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    min-width: 0;
+  }
+
+  .cart-added__options {
+    margin: 0;
+    font-family: var(--custom-font-ui, 'Inter', sans-serif);
+    font-size: 0.75rem;
+    line-height: 1.7;
+    color: var(--custom-mute, #8b8579);
+  }
+
+  .cart-added__options b {
+    color: var(--custom-ink, #121212);
+    font-weight: 500;
+  }
+
+  .cart-added__title,
+  .cart-added__card-title {
+    margin: 0;
+    font-family: var(--custom-font-display, 'Cormorant Garamond', serif);
+    font-weight: 500;
+    font-size: 1.125rem;
+    line-height: 1.25;
+    color: var(--custom-ink, #121212);
+  }
+
+  .cart-added__price,
+  .cart-added__card-price {
+    margin: 0;
+    font-family: var(--custom-font-ui, 'Inter', sans-serif);
+    font-size: 0.84375rem;
+    color: var(--custom-ink, #121212);
+  }
+
+  html[dir='rtl'] :is(.cart-added__options, .cart-added__title, .cart-added__card-title, .cart-added__price, .cart-added__card-price) {
+    font-family: var(--custom-font-arabic, 'IBM Plex Sans Arabic', sans-serif);
+  }
+
+  /* ---------- recommendations ---------- */
+  .cart-added__rail {
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    margin-inline: -1.625rem;
+    padding-inline: 1.625rem;
+    scroll-padding-inline: 1.625rem;
+  }
+
+  .cart-added__rail::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cart-added__card {
+    flex: 0 0 42%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    scroll-snap-align: start;
+  }
+
+  .cart-added__card-media {
+    aspect-ratio: 4 / 5;
+    background: var(--custom-grey, #f1f0ec);
+    overflow: hidden;
+    margin-block-end: 0.5rem;
+  }
+
+  .cart-added__card-title {
+    font-size: 1rem;
+  }
+
+  /* ---------- buttons ---------- */
+  .cart-added__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .cart-added__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0.9375rem;
+    border: 1px solid var(--custom-ink, #121212);
+    border-radius: 999px;
+    font-family: var(--custom-font-ui, 'Inter', sans-serif);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  html[dir='rtl'] .cart-added__button {
+    font-family: var(--custom-font-arabic, 'IBM Plex Sans Arabic', sans-serif);
+    letter-spacing: normal;
+    text-transform: none;
+  }
+
+  .cart-added__button--primary {
+    background: var(--custom-ink, #121212);
+    color: var(--custom-white, #ffffff);
+  }
+
+  .cart-added__button--secondary {
+    background: transparent;
+    color: var(--custom-ink, #121212);
+  }
+
+  .cart-added__button:hover {
+    opacity: 0.85;
+  }
+
+  /* ---------- mobile: bottom sheet ---------- */
+  @media screen and (max-width: 749px) {
+    .cart-added,
+    html[dir='rtl'] .cart-added {
+      inset: auto 0 0 0;
+      width: 100%;
+      max-height: 90dvh;
+      border-radius: 1.25rem 1.25rem 0 0;
+      transform: translateY(100%);
+      opacity: 1;
+    }
+
+    .cart-added[open] {
+      transform: none;
+
+      @starting-style {
+        transform: translateY(100%);
+      }
+    }
+
+    .cart-added__panel {
+      padding: 1.5rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom));
+      gap: 1.5rem;
+    }
+
+    .cart-added__rail {
+      margin-inline: -1.25rem;
+      padding-inline: 1.25rem;
+      scroll-padding-inline: 1.25rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cart-added,
+    .cart-added::backdrop {
+      transition: none;
+    }
+  }
+{% endstylesheet %}

@@ -146,7 +146,7 @@
               <tr
                 id="CartItem-{{ item.key }}"
                 role="row"
-                class="cart-items__table-row{% if item.parent_relationship.parent != null %} cart-items__nested-line{% endif %}{% if context == 'drawer' %}{% unless item.unit_price_measurement %} cart-items__table-row--full-width-variants{% endunless %}{% endif %}"
+                class="cart-items__table-row{% if item.parent_relationship.parent != null %} cart-items__nested-line{% endif %}{% unless item.unit_price_measurement %} cart-items__table-row--full-width-variants{% endunless %}"
                 ref="cartItemRows[]"
                 data-parent-key="{{ item.parent_relationship.parent.key }}"
                 data-key="{{ item.key }}"
@@ -361,7 +361,15 @@
                         hidden
                       {% endif %}
                     >
-                      {{- 'icon-delete.svg' | inline_asset_content -}}
+                      <svg
+                        aria-hidden="true"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.3"
+                      >
+                        <path d="M4 7h16M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2m2 0v13a2 2 0 01-2 2H9a2 2 0 01-2-2V7"/>
+                      </svg>
                       <span class="visually-hidden">{{ 'accessibility.remove' | t }}</span>
                     </button>
                   </div>

@@ -27,10 +27,13 @@
     {%- if cart.empty? or force_empty -%}
       {{ 'content.your_cart_is_empty' | t }}
     {%- else -%}
-      {{ block_settings.title }}
-      {%- if block_settings.show_count -%}{% render 'cart-bubble' %}{%- endif -%}
+      {%- assign fallback_title = 'content.shopping_bag' | t -%}
+      {{ block_settings.title | default: fallback_title }}
     {%- endif -%}
   </h1>
+  {%- if block_settings.show_count and cart.empty? == false and force_empty != true -%}
+    <p class="cart-title__count">{{ 'content.cart_item_count' | t: count: cart.item_count }}</p>
+  {%- endif -%}
 </div>
 
 {% stylesheet %}
