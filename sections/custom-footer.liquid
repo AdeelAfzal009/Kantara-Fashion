@@ -75,22 +75,39 @@
                 {{- 'accessibility.country_region' | t -}}
               </label>
               <span class="custom-footer__select-label">{{ section.settings.ship_to_label }}</span>
-              <select
-                id="CustomFooterCountry-{{ section.id }}"
-                name="country_code"
-                data-custom-footer-submit
-              >
-                {%- for country in localization.available_countries -%}
-                  <option
-                    value="{{ country.iso_code }}"
-                    {% if country.iso_code == localization.country.iso_code %}
-                      selected
-                    {% endif %}
-                  >
-                    {{ country.name }} ({{ country.currency.iso_code }})
-                  </option>
-                {%- endfor -%}
-              </select>
+              {%- comment -%}
+                The select is laid invisibly over its visible value so the arrow sits
+                right after the text; Safari otherwise sizes it to the longest option.
+              {%- endcomment -%}
+              <span class="custom-footer__picker">
+                <span class="custom-footer__picker-value" aria-hidden="true">
+                  {{- localization.country.name }} ({{ localization.country.currency.iso_code -}})
+                </span>
+                <svg
+                  class="custom-footer__picker-icon"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path d="M8 9.5l4-4 4 4M8 14.5l4 4 4-4" />
+                </svg>
+                <select
+                  id="CustomFooterCountry-{{ section.id }}"
+                  name="country_code"
+                  data-custom-footer-submit
+                >
+                  {%- for country in localization.available_countries -%}
+                    <option
+                      value="{{ country.iso_code }}"
+                      {% if country.iso_code == localization.country.iso_code %}
+                        selected
+                      {% endif %}
+                    >
+                      {{ country.name }} ({{ country.currency.iso_code }})
+                    </option>
+                  {%- endfor -%}
+                </select>
+              </span>
             </div>
           {%- endif -%}
 
@@ -99,23 +116,36 @@
               <label class="visually-hidden" for="CustomFooterLanguage-{{ section.id }}">
                 {{- 'content.language' | t -}}
               </label>
-              <select
-                id="CustomFooterLanguage-{{ section.id }}"
-                name="locale_code"
-                data-custom-footer-submit
-              >
-                {%- for language in localization.available_languages -%}
-                  <option
-                    value="{{ language.iso_code }}"
-                    lang="{{ language.iso_code }}"
-                    {% if language.iso_code == localization.language.iso_code %}
-                      selected
-                    {% endif %}
-                  >
-                    {{ language.endonym_name | capitalize }}
-                  </option>
-                {%- endfor -%}
-              </select>
+              <span class="custom-footer__picker">
+                <span class="custom-footer__picker-value" aria-hidden="true">
+                  {{- localization.language.endonym_name | capitalize -}}
+                </span>
+                <svg
+                  class="custom-footer__picker-icon"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path d="M8 9.5l4-4 4 4M8 14.5l4 4 4-4" />
+                </svg>
+                <select
+                  id="CustomFooterLanguage-{{ section.id }}"
+                  name="locale_code"
+                  data-custom-footer-submit
+                >
+                  {%- for language in localization.available_languages -%}
+                    <option
+                      value="{{ language.iso_code }}"
+                      lang="{{ language.iso_code }}"
+                      {% if language.iso_code == localization.language.iso_code %}
+                        selected
+                      {% endif %}
+                    >
+                      {{ language.endonym_name | capitalize }}
+                    </option>
+                  {%- endfor -%}
+                </select>
+              </span>
             </div>
           {%- endif -%}
         {%- endform -%}
@@ -261,13 +291,44 @@
     color: var(--custom-mute);
   }
 
-  .custom-footer__select select {
-    border: 0;
-    background: none;
-    font: inherit;
+  .custom-footer__picker {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     color: var(--custom-footer-color);
-    cursor: pointer;
+  }
+
+  .custom-footer__picker:has(select:focus-visible) {
+    outline: 1px solid var(--custom-footer-color);
+    outline-offset: 4px;
+  }
+
+  .custom-footer__picker-value {
     padding: 2px 0;
+  }
+
+  .custom-footer__picker-icon {
+    flex-shrink: 0;
+    width: 13px;
+    height: 13px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .custom-footer__picker select {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    border: 0;
+    font: inherit;
+    cursor: pointer;
+    appearance: none;
   }
 
   .custom-footer__social {
@@ -280,8 +341,8 @@
   }
 
   .custom-footer__social a {
-    width: 34px;
-    height: 34px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     border: 1px solid var(--custom-footer-line);
     display: flex;
@@ -298,9 +359,8 @@
   }
 
   .custom-footer__social .custom-icon {
-    width: 15px;
-    height: 15px;
-    stroke-width: 1.3;
+    width: 18px;
+    height: 18px;
     color: var(--custom-footer-color);
   }
 

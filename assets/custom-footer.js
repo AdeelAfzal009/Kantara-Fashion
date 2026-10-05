@@ -38,7 +38,13 @@
     if (!form) return;
 
     for (const select of form.querySelectorAll('[data-custom-footer-submit]')) {
-      select.addEventListener('change', () => form.submit());
+      select.addEventListener('change', () => {
+        // Show the choice straight away; the page reloads once the form submits.
+        const value = select.parentElement?.querySelector('.custom-footer__picker-value');
+        const option = select.selectedOptions[0];
+        if (value && option) value.textContent = option.textContent.trim();
+        form.submit();
+      });
     }
   }
 
