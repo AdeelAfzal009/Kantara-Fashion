@@ -89,4 +89,14 @@
   .slideshow-control .icon-caret {
     rotate: -90deg;
   }
+
+  /* RTL swaps the buttons' sides, so mirror the icons to keep them pointing outward.
+     The caret is rotated after scaling, so it mirrors on its own y axis. */
+  html[dir='rtl'] .slideshow-control .svg-wrapper {
+    scale: -1 1;
+  }
+
+  html[dir='rtl'] .slideshow-control .icon-caret {
+    scale: 1 -1;
+  }
 {% endstylesheet %}

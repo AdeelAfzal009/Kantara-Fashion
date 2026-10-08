@@ -261,6 +261,7 @@
     "unit": "Unit",
     "custom_size_note": "Our tailoring team will confirm these measurements with you before your order ships.",
     "tabby_terms": "4 interest-free payments of {{ amount }}",
+    "tabby_learn_more": "Learn more",
     "item_added_to_bag": "Item added to your bag",
     "you_may_also_like": "You may also like",
     "shopping_bag": "Shopping Bag",

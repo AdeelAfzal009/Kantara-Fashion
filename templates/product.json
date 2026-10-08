@@ -186,7 +186,10 @@
             "installments_Fq7bWn": {
               "type": "installments",
               "name": "Installments",
-              "settings": {},
+              "settings": {
+                "tabby_public_key": "pk_01a10be8-cad1-1602-5f8c-d0986a6d9ee2",
+                "tabby_merchant_code": ""
+              },
               "blocks": {}
             },
             "divider_VJhene": {

@@ -1,23 +1,73 @@
 {%- doc -%}
-  Renders placeholder Tabby / Tamara installment boxes for the product page.
+  Renders the Tabby / Tamara installment boxes for the product page.
 
-  Dummy content for now — the terms text and per-payment amount are computed
-  from the product price, but there's no real Tabby/Tamara integration yet.
-  Swap this out once the store registers with them.
+  The tabby box shows Tabby's own promo text (real amounts for the selected
+  variant): assets/tabby-installment-box.js renders Tabby's official promo
+  widget off-screen, copies its wording into the box, and opens Tabby's
+  "Learn more" popup from the box. Until Tabby loads, or if it can't, the box
+  shows a computed "4 interest-free payments" fallback. Tamara is placeholder
+  text until the store registers with Tamara.
 {%- enddoc -%}
 
 {% liquid
   assign product = closest.product
   assign price = product.selected_or_first_available_variant.price | default: product.price
   assign tabby_amount = price | divided_by: 4.0 | money
+  assign tabby_currency = cart.currency.iso_code
+
+  assign tabby_merchant_code = block.settings.tabby_merchant_code | strip
+  if tabby_merchant_code == blank
+    case tabby_currency
+      when 'AED'
+        assign tabby_merchant_code = 'default'
+      when 'SAR'
+        assign tabby_merchant_code = 'ksa'
+    endcase
+  endif
 %}
 
 {% if product %}
-  <div class="bnpl-installments" {{ block.shopify_attributes }}>
-    <div class="installment-box">
+  <script
+    type="module"
+    src="{{ 'tabby-installment-box.js' | asset_url }}"
+  ></script>
+
+  <div
+    class="bnpl-installments"
+    {{ block.shopify_attributes }}
+  >
+    {%- comment -%}
+      data-skip-node-update keeps variant re-renders from replacing the Tabby text;
+      the component refreshes it itself when the variant changes.
+    {%- endcomment -%}
+    <tabby-installment-box
+      class="installment-box"
+      data-skip-node-update
+      data-price="{{ price | divided_by: 100.0 }}"
+      data-currency="{{ tabby_currency }}"
+      data-lang="{{ localization.language.iso_code }}"
+      data-public-key="{{ block.settings.tabby_public_key | strip | escape }}"
+      data-merchant-code="{{ tabby_merchant_code | escape }}"
+      data-product-id="{{ product.id }}"
+    >
       <span class="installment-box__provider">tabby</span>
-      <span class="installment-box__terms">{{ 'content.tabby_terms' | t: amount: tabby_amount }}</span>
-    </div>
+      <span
+        class="installment-box__terms"
+        ref="terms"
+      >
+        {{- 'content.tabby_terms' | t: amount: tabby_amount -}}
+      </span>
+      <button
+        type="button"
+        class="installment-box__link"
+        ref="learnMore"
+        on:click="/openDetails"
+        hidden
+      >
+        {{- 'content.tabby_learn_more' | t -}}
+      </button>
+    </tabby-installment-box>
+
     <div class="installment-box">
       <span class="installment-box__provider">tamara</span>
       <span class="installment-box__terms">{{ 'content.tamara_terms' | t }}</span>
@@ -44,7 +94,9 @@
     padding: 0.75rem 0.875rem;
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
     gap: 0.3125rem;
+    min-width: 0;
   }
 
   .installment-box__provider {
@@ -62,13 +114,58 @@
     color: rgb(var(--color-foreground-rgb) / 0.55);
     line-height: 1.5;
   }
+
+  .installment-box__terms strong {
+    font-weight: 600;
+    color: var(--color-foreground);
+  }
+
+  .installment-box__link {
+    padding: 0;
+    border: none;
+    background: none;
+    font-family: var(--font-body--family);
+    font-size: 0.6875rem;
+    line-height: 1.5;
+    color: var(--color-foreground);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+    cursor: pointer;
+  }
+
+  /* Tabby's own widget renders here, off-screen; its text is mirrored into the box. */
+  .installment-box__source {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
 {% endstylesheet %}
 
 {% schema %}
 {
   "name": "Installments",
   "tag": null,
-  "settings": [],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Tabby"
+    },
+    {
+      "type": "text",
+      "id": "tabby_public_key",
+      "label": "Tabby public key",
+      "info": "From your Tabby merchant dashboard. Starts with pk_."
+    },
+    {
+      "type": "text",
+      "id": "tabby_merchant_code",
+      "label": "Tabby merchant code",
+      "info": "Leave blank to use \"default\" for AED and \"ksa\" for SAR, or enter the code Tabby gave your store."
+    }
+  ],
   "presets": [
     {
       "name": "Installments"
